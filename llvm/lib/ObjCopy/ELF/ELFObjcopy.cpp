@@ -796,9 +796,9 @@ static Error handleArgs(const CommonConfig &Config, const ELFConfig &ELFConfig,
 
   // Dump sections before add/remove for compatibility with GNU objcopy.
   for (StringRef Flag : Config.DumpSection) {
-    StringRef SectionName;
-    StringRef FileName;
-    std::tie(SectionName, FileName) = Flag.split('=');
+    
+    
+    auto [SectionName, FileName] = Flag.split('=');
     if (Error E =
             dumpSectionToFile(SectionName, FileName, Config.InputFilename, Obj))
       return E;

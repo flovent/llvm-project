@@ -2779,8 +2779,8 @@ public:
           }
 
           SmallPtrSet<Value *, 8> ReusedExprs;
-          OpInfoTy Counts, SharedCounts;
-          std::tie(Counts, SharedCounts) =
+          
+          auto [Counts, SharedCounts] =
               sumOpInfos(L, ReusedExprs, ExprsInSubprogram, Shared);
 
           OptimizationRemark Rem(DEBUG_TYPE, "matrix-lowered", Loc,

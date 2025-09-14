@@ -766,9 +766,9 @@ public:
     auto CFR = reinterpret_cast<const FuncRecordType *>(FuncRecBuf);
     while ((const char *)CFR < FuncRecBufEnd) {
       // Validate the length of the coverage mapping for this function.
-      const char *NextMappingBuf;
-      const FuncRecordType *NextCFR;
-      std::tie(NextMappingBuf, NextCFR) =
+      
+      
+      auto [NextMappingBuf, NextCFR] =
           CFR->template advanceByOne<Endian>(OutOfLineMappingBuf);
       if (Version < CovMapVersion::Version4)
         if (NextMappingBuf > OutOfLineMappingBufEnd)

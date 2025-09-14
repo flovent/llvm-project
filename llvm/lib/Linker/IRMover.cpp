@@ -1073,9 +1073,9 @@ Error IRLinker::linkGlobalValueBody(GlobalValue &Dst, GlobalValue &Src) {
 
 void IRLinker::flushRAUWWorklist() {
   for (const auto &Elem : RAUWWorklist) {
-    GlobalValue *Old;
-    Value *New;
-    std::tie(Old, New) = Elem;
+    
+    
+    auto [Old, New] = Elem;
 
     Old->replaceAllUsesWith(New);
     Old->eraseFromParent();

@@ -667,8 +667,8 @@ int llvm_gsymutil_main(int argc, char **argv, const llvm::ToolContext &) {
       llvm::erase_if(StrippedInputLine,
                      [](char c) { return c == '\r' || c == '\n'; });
 
-      StringRef AddrStr, GSYMPath;
-      std::tie(AddrStr, GSYMPath) =
+      
+      auto [AddrStr, GSYMPath] =
           llvm::StringRef{StrippedInputLine}.split(' ');
 
       if (GSYMPath != CurrentGSYMPath) {

@@ -112,9 +112,9 @@ static void removeSections(const CommonConfig &Config, Object &Obj) {
 static Error handleArgs(const CommonConfig &Config, Object &Obj) {
   // Only support AddSection, DumpSection, RemoveSection for now.
   for (StringRef Flag : Config.DumpSection) {
-    StringRef SecName;
-    StringRef FileName;
-    std::tie(SecName, FileName) = Flag.split("=");
+    
+    
+    auto [SecName, FileName] = Flag.split("=");
     if (Error E =
             dumpSectionToFile(SecName, FileName, Config.InputFilename, Obj))
       return E;

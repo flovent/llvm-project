@@ -65,8 +65,8 @@ void LiveRangeCalc::updateFromLiveIns() {
       continue;
     MachineBasicBlock *MBB = I.DomNode->getBlock();
     assert(I.Value && "No live-in value found");
-    SlotIndex Start, End;
-    std::tie(Start, End) = Indexes->getMBBRange(MBB);
+    
+    auto [Start, End] = Indexes->getMBBRange(MBB);
 
     if (I.Kill.isValid())
       // Value is killed inside this block.
@@ -149,8 +149,8 @@ bool LiveRangeCalc::isDefOnEntry(LiveRange &LR, ArrayRef<SlotIndex> Undefs,
       if (LOB.first != nullptr && LOB.first != &UndefVNI)
         return MarkDefined(B);
     }
-    SlotIndex Begin, End;
-    std::tie(Begin, End) = Indexes->getMBBRange(&B);
+    
+    auto [Begin, End] = Indexes->getMBBRange(&B);
     // Treat End as not belonging to B.
     // If LR has a segment S that starts at the next block, i.e. [End, ...),
     // std::upper_bound will return the segment following S. Instead,
@@ -243,8 +243,8 @@ bool LiveRangeCalc::findReachingDefs(LiveRange &LR, MachineBasicBlock &UseMBB,
          continue;
        }
 
-       SlotIndex Start, End;
-       std::tie(Start, End) = Indexes->getMBBRange(Pred);
+       
+       auto [Start, End] = Indexes->getMBBRange(Pred);
 
        // First time we see Pred.  Try to determine the live-out value, but set
        // it as null if Pred is live-through with an unknown value.
@@ -284,8 +284,8 @@ bool LiveRangeCalc::findReachingDefs(LiveRange &LR, MachineBasicBlock &UseMBB,
     assert(TheVNI != nullptr && TheVNI != &UndefVNI);
     LiveRangeUpdater Updater(&LR);
     for (unsigned BN : WorkList) {
-      SlotIndex Start, End;
-      std::tie(Start, End) = Indexes->getMBBRange(BN);
+      
+      auto [Start, End] = Indexes->getMBBRange(BN);
       // Trim the live range in UseMBB.
       if (BN == UseMBBNum && Use.isValid())
         End = Use;
@@ -297,9 +297,9 @@ bool LiveRangeCalc::findReachingDefs(LiveRange &LR, MachineBasicBlock &UseMBB,
   }
 
   // Prepare the defined/undefined bit vectors.
-  EntryInfoMap::iterator Entry;
-  bool DidInsert;
-  std::tie(Entry, DidInsert) = EntryInfos.insert(
+  
+  
+  auto [Entry, DidInsert] = EntryInfos.insert(
       std::make_pair(&LR, std::make_pair(BitVector(), BitVector())));
   if (DidInsert) {
     // Initialize newly inserted entries.
@@ -397,8 +397,8 @@ void LiveRangeCalc::updateSSA() {
       if (needPHI) {
         Changed = true;
         assert(Alloc && "Need VNInfo allocator to create PHI-defs");
-        SlotIndex Start, End;
-        std::tie(Start, End) = Indexes->getMBBRange(MBB);
+        
+        auto [Start, End] = Indexes->getMBBRange(MBB);
         LiveRange &LR = I.LR;
         VNInfo *VNI = LR.getNextValue(Start, *Alloc);
         I.Value = VNI;

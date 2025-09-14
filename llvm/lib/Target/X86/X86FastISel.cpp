@@ -1513,9 +1513,9 @@ bool X86FastISel::X86SelectCmp(const Instruction *I) {
     return true;
   }
 
-  X86::CondCode CC;
-  bool SwapArgs;
-  std::tie(CC, SwapArgs) = X86::getX86ConditionCode(Predicate);
+  
+  
+  auto [CC, SwapArgs] = X86::getX86ConditionCode(Predicate);
   assert(CC <= X86::LAST_VALID_COND && "Unexpected condition code.");
 
   if (SwapArgs)
@@ -2179,9 +2179,9 @@ bool X86FastISel::X86FastEmitSSESelect(MVT RetVT, const Instruction *I) {
       CmpRHS = CmpLHS;
   }
 
-  unsigned CC;
-  bool NeedSwap;
-  std::tie(CC, NeedSwap) = getX86SSEConditionCode(Predicate);
+  
+  
+  auto [CC, NeedSwap] = getX86SSEConditionCode(Predicate);
   if (CC > 7 && !Subtarget->hasAVX())
     return false;
 

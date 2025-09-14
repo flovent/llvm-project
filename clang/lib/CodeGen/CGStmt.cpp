@@ -3004,9 +3004,9 @@ void CodeGenFunction::EmitAsmStmt(const AsmStmt &S) {
       InOutConstraints += ',';
 
       const Expr *InputExpr = S.getOutputExpr(i);
-      llvm::Value *Arg;
-      llvm::Type *ArgElemType;
-      std::tie(Arg, ArgElemType) = EmitAsmInputLValue(
+      
+      
+      auto [Arg, ArgElemType] = EmitAsmInputLValue(
           Info, Dest, InputExpr->getType(), InOutConstraints,
           InputExpr->getExprLoc());
 
@@ -3067,9 +3067,9 @@ void CodeGenFunction::EmitAsmStmt(const AsmStmt &S) {
         getTarget(), CGM, S, false /* No EarlyClobber */);
 
     std::string ReplaceConstraint (InputConstraint);
-    llvm::Value *Arg;
-    llvm::Type *ArgElemType;
-    std::tie(Arg, ArgElemType) = EmitAsmInput(Info, InputExpr, Constraints);
+    
+    
+    auto [Arg, ArgElemType] = EmitAsmInput(Info, InputExpr, Constraints);
 
     // If this input argument is tied to a larger output result, extend the
     // input to be the same size as the output.  The LLVM backend wants to see

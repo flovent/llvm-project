@@ -169,9 +169,9 @@ static bool unifyLoopExits(DominatorTree &DT, LoopInfo &LI, Loop *L) {
 
   SmallVector<BasicBlock *, 8> GuardBlocks;
   DomTreeUpdater DTU(DT, DomTreeUpdater::UpdateStrategy::Eager);
-  BasicBlock *LoopExitBlock;
-  bool ChangedCFG;
-  std::tie(LoopExitBlock, ChangedCFG) = CHub.finalize(
+  
+  
+  auto [LoopExitBlock, ChangedCFG] = CHub.finalize(
       &DTU, GuardBlocks, "loop.exit", MaxBooleansInControlFlowHub.getValue());
   if (!ChangedCFG)
     return false;

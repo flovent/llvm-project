@@ -81,9 +81,9 @@ Expected<BasicLayout::ContiguousPageBasedLayoutSizes>
 BasicLayout::getContiguousPageBasedLayoutSizes(uint64_t PageSize) {
   ContiguousPageBasedLayoutSizes SegsSizes;
 
-  for (auto &KV : segments()) {
-    auto &AG = KV.first;
-    auto &Seg = KV.second;
+  for (auto& [AG, Seg] : segments()) {
+    
+    
 
     if (Seg.Alignment > PageSize)
       return make_error<StringError>("Segment alignment greater than page size",
@@ -163,9 +163,9 @@ void SimpleSegmentAlloc::Create(JITLinkMemoryManager &MemMgr,
   orc::AllocGroupSmallMap<Block *> ContentBlocks;
 
   orc::ExecutorAddr NextAddr(0x100000);
-  for (auto &KV : Segments) {
-    auto &AG = KV.first;
-    auto &Seg = KV.second;
+  for (auto& [AG, Seg] : Segments) {
+    
+    
 
     assert(AG.getMemLifetime() != orc::MemLifetime::NoAlloc &&
            "NoAlloc segments are not supported by SimpleSegmentAlloc");
@@ -428,9 +428,9 @@ void InProcessMemoryManager::allocate(const JITLinkDylib *JD, LinkGraph &G,
   });
 
   // Build ProtMap, assign addresses.
-  for (auto &KV : BL.segments()) {
-    auto &AG = KV.first;
-    auto &Seg = KV.second;
+  for (auto& [AG, Seg] : BL.segments()) {
+    
+    
 
     auto &SegAddr = (AG.getMemLifetime() == orc::MemLifetime::Standard)
                         ? NextStandardSegAddr

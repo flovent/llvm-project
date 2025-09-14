@@ -145,8 +145,8 @@ static const char *getArgumentValueString(const CallExpr *CE,
   if (AssertionVal.isUndef())
     return "UNDEFINED";
 
-  ProgramStateRef StTrue, StFalse;
-  std::tie(StTrue, StFalse) =
+  
+  auto [StTrue, StFalse] =
       State->assume(AssertionVal.castAs<DefinedOrUnknownSVal>());
 
   if (StTrue) {

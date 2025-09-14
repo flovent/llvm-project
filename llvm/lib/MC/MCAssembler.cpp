@@ -792,8 +792,8 @@ void MCAssembler::relaxLEB(MCFragment &F) {
                  ? F.getLEBValue().evaluateKnownAbsolute(Value, *this)
                  : F.getLEBValue().evaluateAsAbsolute(Value, *this);
   if (!Abs) {
-    bool Relaxed, UseZeroPad;
-    std::tie(Relaxed, UseZeroPad) = getBackend().relaxLEB128(F, Value);
+    
+    auto [Relaxed, UseZeroPad] = getBackend().relaxLEB128(F, Value);
     if (!Relaxed) {
       reportError(F.getLEBValue().getLoc(),
                   Twine(F.isLEBSigned() ? ".s" : ".u") +

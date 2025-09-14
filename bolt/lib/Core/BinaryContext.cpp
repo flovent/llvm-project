@@ -1223,9 +1223,9 @@ void BinaryContext::addAdrpAddRelocAArch64(BinaryFunction &BF,
                                            MCInst &LoadLowBits,
                                            MCInst &LoadHiBits,
                                            uint64_t Target) {
-  const MCSymbol *TargetSymbol;
-  uint64_t Addend = 0;
-  std::tie(TargetSymbol, Addend) = handleAddressRef(Target, BF,
+  
+  
+  auto [TargetSymbol, Addend] = handleAddressRef(Target, BF,
                                                     /*IsPCRel*/ true);
   int64_t Val;
   MIB->replaceImmWithSymbolRef(LoadHiBits, TargetSymbol, Addend, Ctx.get(), Val,

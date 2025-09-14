@@ -884,9 +884,9 @@ public:
 
 void DiagnoseUnguardedAvailability::DiagnoseDeclAvailability(
     NamedDecl *D, SourceRange Range, ObjCInterfaceDecl *ReceiverClass) {
-  AvailabilityResult Result;
-  const NamedDecl *OffendingDecl;
-  std::tie(Result, OffendingDecl) =
+  
+  
+  auto [Result, OffendingDecl] =
       SemaRef.ShouldDiagnoseAvailabilityOfDecl(D, nullptr, ReceiverClass);
   if (Result != AR_Available) {
     // All other diagnostic kinds have already been handled in
@@ -1125,10 +1125,10 @@ void Sema::DiagnoseAvailabilityOfDecl(NamedDecl *D,
                                       ObjCInterfaceDecl *ClassReceiver) {
 
   std::string Message;
-  AvailabilityResult Result;
-  const NamedDecl* OffendingDecl;
+  
+  
   // See if this declaration is unavailable, deprecated, or partial.
-  std::tie(Result, OffendingDecl) =
+  auto [Result, OffendingDecl] =
       ShouldDiagnoseAvailabilityOfDecl(D, &Message, ClassReceiver);
   if (Result == AR_Available)
     return;

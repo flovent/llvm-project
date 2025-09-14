@@ -143,8 +143,8 @@ static Error processCommandLineLibraries() {
 }
 
 static Error processFileList() {
-  StringRef FileName, DirName;
-  std::tie(FileName, DirName) = StringRef(FileList).rsplit(",");
+  
+  auto [FileName, DirName] = StringRef(FileList).rsplit(",");
 
   ErrorOr<std::unique_ptr<MemoryBuffer>> FileOrErr =
       MemoryBuffer::getFileOrSTDIN(FileName, /*IsText=*/false,
@@ -358,8 +358,8 @@ private:
                                  Member.MemberName.data());
 
       auto *O = cast<MachOObjectFile>(ObjOrErr->get());
-      uint32_t FileCPUType, FileCPUSubtype;
-      std::tie(FileCPUType, FileCPUSubtype) = MachO::getCPUTypeFromArchitecture(
+      
+      auto [FileCPUType, FileCPUSubtype] = MachO::getCPUTypeFromArchitecture(
           MachO::getArchitectureFromName(O->getArchTriple().getArchName()));
 
       // If -arch_only is specified then skip this file if it doesn't match

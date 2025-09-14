@@ -17855,9 +17855,9 @@ Decl *Sema::BuildStaticAssertDeclaration(SourceLocation StaticAssertLoc,
                      !Str.empty();
         Msg << Str;
       }
-      Expr *InnerCond = nullptr;
-      std::string InnerCondDescription;
-      std::tie(InnerCond, InnerCondDescription) =
+      
+      
+      auto [InnerCond, InnerCondDescription] =
         findFailedBooleanCondition(Converted.get());
       if (const auto *ConceptIDExpr =
               dyn_cast_or_null<ConceptSpecializationExpr>(InnerCond)) {

@@ -88,8 +88,8 @@ void BoolAssignmentChecker::checkBind(SVal Loc, SVal Val, const Stmt *S,
   llvm::APSInt Zero = BVF.getValue(0, RegTy);
   llvm::APSInt One = BVF.getValue(1, RegTy);
 
-  ProgramStateRef StIn, StOut;
-  std::tie(StIn, StOut) = CM.assumeInclusiveRangeDual(State, *NV, Zero, One);
+  
+  auto [StIn, StOut] = CM.assumeInclusiveRangeDual(State, *NV, Zero, One);
 
   if (!StIn)
     emitReport(StOut, C);

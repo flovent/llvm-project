@@ -804,8 +804,8 @@ objcopy::parseObjcopyOptions(ArrayRef<const char *> ArgsArr,
   }
 
   for (const auto *Arg : InputArgs.filtered(OBJCOPY_subsystem)) {
-    StringRef Subsystem, Version;
-    std::tie(Subsystem, Version) = StringRef(Arg->getValue()).split(':');
+    
+    auto [Subsystem, Version] = StringRef(Arg->getValue()).split(':');
     COFFConfig.Subsystem =
         StringSwitch<unsigned>(Subsystem.lower())
             .Case("boot_application",
@@ -827,8 +827,8 @@ objcopy::parseObjcopyOptions(ArrayRef<const char *> ArgsArr,
                                "'%s' is not a valid subsystem",
                                Subsystem.str().c_str());
     if (!Version.empty()) {
-      StringRef Major, Minor;
-      std::tie(Major, Minor) = Version.split('.');
+      
+      auto [Major, Minor] = Version.split('.');
       unsigned Number;
       if (Major.getAsInteger(10, Number))
         return createStringError(errc::invalid_argument,

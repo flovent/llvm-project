@@ -2657,9 +2657,9 @@ static void CollectArgsForIntegratedAssembler(Compilation &C,
           break;
         }
         const char *S = A->getValue(1);
-        auto Pair = StringRef(S).split('=');
-        auto Sym = Pair.first;
-        auto SVal = Pair.second;
+        auto [Sym, SVal] = StringRef(S).split('=');
+        
+        
 
         if (Sym.empty() || SVal.empty()) {
           D.Diag(diag::err_drv_defsym_invalid_format) << S;

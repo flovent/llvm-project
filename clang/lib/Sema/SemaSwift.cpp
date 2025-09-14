@@ -590,9 +590,9 @@ bool SemaSwift::DiagnoseName(Decl *D, StringRef Name, SourceLocation Loc,
               isa<VarDecl>(D) || isa<TypedefNameDecl>(D) || isa<TagDecl>(D) ||
               isa<IndirectFieldDecl>(D) || isa<FieldDecl>(D)) &&
              !IsAsync) {
-    StringRef ContextName, BaseName;
+    
 
-    std::tie(ContextName, BaseName) = Name.rsplit('.');
+    auto [ContextName, BaseName] = Name.rsplit('.');
     if (BaseName.empty()) {
       BaseName = ContextName;
       ContextName = StringRef();

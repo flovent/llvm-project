@@ -1488,8 +1488,8 @@ namespace {
             = SemaRef.CurrentInstantiationScope->getPartiallySubstitutedPack()){
         MultiLevelTemplateArgumentList &TemplateArgs
           = const_cast<MultiLevelTemplateArgumentList &>(this->TemplateArgs);
-        unsigned Depth, Index;
-        std::tie(Depth, Index) = getDepthAndIndex(PartialPack);
+        
+        auto [Depth, Index] = getDepthAndIndex(PartialPack);
         if (TemplateArgs.hasTemplateArgument(Depth, Index)) {
           Result = TemplateArgs(Depth, Index);
           TemplateArgs.setArgument(Depth, Index, TemplateArgument());
@@ -1511,8 +1511,8 @@ namespace {
             = SemaRef.CurrentInstantiationScope->getPartiallySubstitutedPack()){
         MultiLevelTemplateArgumentList &TemplateArgs
         = const_cast<MultiLevelTemplateArgumentList &>(this->TemplateArgs);
-        unsigned Depth, Index;
-        std::tie(Depth, Index) = getDepthAndIndex(PartialPack);
+        
+        auto [Depth, Index] = getDepthAndIndex(PartialPack);
         TemplateArgs.setArgument(Depth, Index, Arg);
       }
     }

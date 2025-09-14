@@ -1450,8 +1450,8 @@ bool MasmParser::parsePrimaryExpr(const MCExpr *&Res, SMLoc &EndLoc,
     } else {
       SymbolName = Split.first;
       if (lookUpField(SymbolName, Split.second, Info)) {
-        std::pair<StringRef, StringRef> BaseMember = Split.second.split('.');
-        StringRef Base = BaseMember.first, Member = BaseMember.second;
+        auto [Base, Member] = Split.second.split('.');
+        
         lookUpField(Base, Member, Info);
       } else if (Structs.count(SymbolName.lower())) {
         // This is actually a reference to a field offset.
@@ -5773,8 +5773,8 @@ bool MasmParser::defineMacro(StringRef Name, StringRef Value) {
 }
 
 bool MasmParser::lookUpField(StringRef Name, AsmFieldInfo &Info) const {
-  const std::pair<StringRef, StringRef> BaseMember = Name.split('.');
-  const StringRef Base = BaseMember.first, Member = BaseMember.second;
+  const auto [Base, Member] = Name.split('.');
+  
   return lookUpField(Base, Member, Info);
 }
 

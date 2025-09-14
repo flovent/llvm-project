@@ -154,11 +154,11 @@ void UninitializedObjectChecker::checkEndFunction(
 
   FindUninitializedFields F(Context.getState(), R, Opts);
 
-  std::pair<ProgramStateRef, const UninitFieldMap &> UninitInfo =
+  auto [UpdatedState, UninitFields] =
       F.getResults();
 
-  ProgramStateRef UpdatedState = UninitInfo.first;
-  const UninitFieldMap &UninitFields = UninitInfo.second;
+  
+  
 
   if (UninitFields.empty()) {
     Context.addTransition(UpdatedState);

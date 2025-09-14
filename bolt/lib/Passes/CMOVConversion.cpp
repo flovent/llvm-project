@@ -217,9 +217,9 @@ void CMOVConversion::runOnFunction(BinaryFunction &Function) {
       continue;
 
     int ConditionBias = calculateConditionBias(*BB, *ConditionalSucc);
-    int MispredictionRate = 0;
-    uint64_t MispredictionCount = 0;
-    std::tie(MispredictionRate, MispredictionCount) =
+    
+    
+    auto [MispredictionRate, MispredictionCount] =
         calculateMispredictionRate(*BB);
 
     Local.StaticPossible++;

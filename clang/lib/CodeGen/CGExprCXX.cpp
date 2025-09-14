@@ -409,9 +409,9 @@ RValue CodeGenFunction::EmitCXXMemberOrOperatorMemberCallExpr(
   } else {
     if (SanOpts.has(SanitizerKind::CFINVCall) &&
         MD->getParent()->isDynamicClass()) {
-      llvm::Value *VTable;
-      const CXXRecordDecl *RD;
-      std::tie(VTable, RD) = CGM.getCXXABI().LoadVTablePtr(
+      
+      
+      auto [VTable, RD] = CGM.getCXXABI().LoadVTablePtr(
           *this, This.getAddress(), CalleeDecl->getParent());
       EmitVTablePtrCheckForCall(RD, VTable, CFITCK_NVCall, CE->getBeginLoc());
     }
@@ -532,9 +532,9 @@ static void EmitNullBaseClassInitialization(CodeGenFunction &CGF,
     // Stop before we hit any virtual base pointers located in virtual bases.
     if (VBPtrOffset >= NVSize)
       break;
-    std::pair<CharUnits, CharUnits> LastStore = Stores.pop_back_val();
-    CharUnits LastStoreOffset = LastStore.first;
-    CharUnits LastStoreSize = LastStore.second;
+    auto [LastStoreOffset, LastStoreSize] = Stores.pop_back_val();
+    
+    
 
     CharUnits SplitBeforeOffset = LastStoreOffset;
     CharUnits SplitBeforeSize = VBPtrOffset - SplitBeforeOffset;
@@ -569,9 +569,9 @@ static void EmitNullBaseClassInitialization(CodeGenFunction &CGF,
     Address SrcPtr(NullVariable, CGF.Int8Ty, Align);
 
     // Get and call the appropriate llvm.memcpy overload.
-    for (std::pair<CharUnits, CharUnits> Store : Stores) {
-      CharUnits StoreOffset = Store.first;
-      CharUnits StoreSize = Store.second;
+    for (auto [StoreOffset, StoreSize] : Stores) {
+      
+      
       llvm::Value *StoreSizeVal = CGF.CGM.getSize(StoreSize);
       CGF.Builder.CreateMemCpy(
           CGF.Builder.CreateConstInBoundsByteGEP(DestPtr, StoreOffset),
@@ -583,9 +583,9 @@ static void EmitNullBaseClassInitialization(CodeGenFunction &CGF,
   // because in LLVM, all default initializers (other than the ones we just
   // handled above) are guaranteed to have a bit pattern of all zeros.
   } else {
-    for (std::pair<CharUnits, CharUnits> Store : Stores) {
-      CharUnits StoreOffset = Store.first;
-      CharUnits StoreSize = Store.second;
+    for (auto [StoreOffset, StoreSize] : Stores) {
+      
+      
       llvm::Value *StoreSizeVal = CGF.CGM.getSize(StoreSize);
       CGF.Builder.CreateMemSet(
           CGF.Builder.CreateConstInBoundsByteGEP(DestPtr, StoreOffset),

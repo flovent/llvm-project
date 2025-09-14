@@ -245,9 +245,9 @@ void SharedMemoryMapper::reserve(size_t NumBytes,
         if (!Result)
           return OnReserved(Result.takeError());
 
-        ExecutorAddr RemoteAddr;
-        std::string SharedMemoryName;
-        std::tie(RemoteAddr, SharedMemoryName) = std::move(*Result);
+        
+        
+        auto [RemoteAddr, SharedMemoryName] = std::move(*Result);
 
         void *LocalAddr = nullptr;
 

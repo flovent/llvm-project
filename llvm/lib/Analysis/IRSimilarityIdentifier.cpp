@@ -717,9 +717,9 @@ bool IRSimilarityCandidate::compareAssignmentMapping(
     const unsigned InstValA, const unsigned &InstValB,
     DenseMap<unsigned, DenseSet<unsigned>> &ValueNumberMappingA,
     DenseMap<unsigned, DenseSet<unsigned>> &ValueNumberMappingB) {
-  DenseMap<unsigned, DenseSet<unsigned>>::iterator ValueMappingIt;
-  bool WasInserted;
-  std::tie(ValueMappingIt, WasInserted) = ValueNumberMappingA.insert(
+  
+  
+  auto [ValueMappingIt, WasInserted] = ValueNumberMappingA.insert(
       std::make_pair(InstValA, DenseSet<unsigned>({InstValB})));
   if (!WasInserted && !ValueMappingIt->second.contains(InstValB))
     return false;

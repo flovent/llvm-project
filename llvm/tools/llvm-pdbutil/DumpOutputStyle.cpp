@@ -418,9 +418,9 @@ static Expected<std::vector<std::string>> getSectionNames(PDBFile &File) {
   if (!ExpectedHeaders)
     return ExpectedHeaders.takeError();
 
-  std::unique_ptr<MappedBlockStream> Stream;
-  ArrayRef<object::coff_section> Headers;
-  std::tie(Stream, Headers) = std::move(*ExpectedHeaders);
+  
+  
+  auto [Stream, Headers] = std::move(*ExpectedHeaders);
   std::vector<std::string> Names;
   for (const auto &H : Headers)
     Names.push_back(H.Name);

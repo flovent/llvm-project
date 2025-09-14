@@ -1010,11 +1010,11 @@ Expected<std::string> computeArchiveRelativePath(StringRef From, StringRef To) {
     return sys::path::convert_to_slash(PathTo);
 
   // Skip common prefixes
-  auto FromTo =
+  auto [FromI, ToI] =
       std::mismatch(sys::path::begin(DirFrom), sys::path::end(DirFrom),
                     sys::path::begin(PathTo));
-  auto FromI = FromTo.first;
-  auto ToI = FromTo.second;
+  
+  
 
   // Construct relative path
   SmallString<128> Relative;

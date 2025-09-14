@@ -116,8 +116,8 @@ Error PatchEntries::runOnFunctions(BinaryContext &BC) {
           NameResolver::append(Patch.Symbol->getName(), ".org.0"));
 
       // Verify the size requirements.
-      uint64_t HotSize, ColdSize;
-      std::tie(HotSize, ColdSize) = BC.calculateEmittedSize(*PatchFunction);
+      
+      auto [HotSize, ColdSize] = BC.calculateEmittedSize(*PatchFunction);
       assert(!ColdSize && "unexpected cold code");
       assert(HotSize <= PatchSize && "max patch size exceeded");
     }

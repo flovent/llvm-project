@@ -419,9 +419,9 @@ private:
           unexpectedToken(RemainingExpr, Expr, "expected ')'"), "");
     RemainingExpr = RemainingExpr.substr(1).ltrim();
 
-    uint64_t StubAddr;
-    std::string ErrorMsg;
-    std::tie(StubAddr, ErrorMsg) =
+    
+    
+    auto [StubAddr, ErrorMsg] =
         Checker.getStubOrGOTAddrFor(StubContainerName, Symbol, KindNameFilter,
                                     PCtx.IsInsideLoad, IsStubAddr);
 
@@ -459,9 +459,9 @@ private:
           unexpectedToken(RemainingExpr, Expr, "expected ')'"), "");
     RemainingExpr = RemainingExpr.substr(1).ltrim();
 
-    uint64_t StubAddr;
-    std::string ErrorMsg;
-    std::tie(StubAddr, ErrorMsg) = Checker.getSectionAddr(
+    
+    
+    auto [StubAddr, ErrorMsg] = Checker.getSectionAddr(
         FileName, SectionName, PCtx.IsInsideLoad);
 
     if (ErrorMsg != "")
@@ -475,9 +475,9 @@ private:
   // Return the result, plus the expression remaining to be parsed.
   std::pair<EvalResult, StringRef> evalIdentifierExpr(StringRef Expr,
                                                       ParseContext PCtx) const {
-    StringRef Symbol;
-    StringRef RemainingExpr;
-    std::tie(Symbol, RemainingExpr) = parseSymbol(Expr);
+    
+    
+    auto [Symbol, RemainingExpr] = parseSymbol(Expr);
 
     // Check for builtin function calls.
     if (Symbol == "decode_operand")
@@ -533,9 +533,9 @@ private:
   // return a pair containing the result, and the expression remaining to be
   // evaluated.
   std::pair<EvalResult, StringRef> evalNumberExpr(StringRef Expr) const {
-    StringRef ValueStr;
-    StringRef RemainingExpr;
-    std::tie(ValueStr, RemainingExpr) = parseNumberString(Expr);
+    
+    
+    auto [ValueStr, RemainingExpr] = parseNumberString(Expr);
 
     if (ValueStr.empty() || !isdigit(ValueStr[0]))
       return std::make_pair(
@@ -551,9 +551,9 @@ private:
   std::pair<EvalResult, StringRef> evalParensExpr(StringRef Expr,
                                                   ParseContext PCtx) const {
     assert(Expr.starts_with("(") && "Not a parenthesized expression");
-    EvalResult SubExprResult;
-    StringRef RemainingExpr;
-    std::tie(SubExprResult, RemainingExpr) =
+    
+    
+    auto [SubExprResult, RemainingExpr] =
         evalComplexExpr(evalSimpleExpr(Expr.substr(1).ltrim(), PCtx), PCtx);
     if (SubExprResult.hasError())
       return std::make_pair(SubExprResult, "");
@@ -656,9 +656,9 @@ private:
   // expression remaining to be parsed.
   std::pair<EvalResult, StringRef>
   evalSliceExpr(const std::pair<EvalResult, StringRef> &Ctx) const {
-    EvalResult SubExprResult;
-    StringRef RemainingExpr;
-    std::tie(SubExprResult, RemainingExpr) = Ctx;
+    
+    
+    auto [SubExprResult, RemainingExpr] = Ctx;
 
     assert(RemainingExpr.starts_with("[") && "Not a slice expr.");
     RemainingExpr = RemainingExpr.substr(1).ltrim();
@@ -701,9 +701,9 @@ private:
   std::pair<EvalResult, StringRef>
   evalComplexExpr(const std::pair<EvalResult, StringRef> &LHSAndRemaining,
                   ParseContext PCtx) const {
-    EvalResult LHSResult;
-    StringRef RemainingExpr;
-    std::tie(LHSResult, RemainingExpr) = LHSAndRemaining;
+    
+    
+    auto [LHSResult, RemainingExpr] = LHSAndRemaining;
 
     // If there was an error, or there's nothing left to evaluate, return the
     // result.

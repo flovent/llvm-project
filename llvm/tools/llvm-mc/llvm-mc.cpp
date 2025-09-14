@@ -328,9 +328,9 @@ static int AsLexInput(SourceMgr &SrcMgr, MCAsmInfo &MAI,
 
 static int fillCommandLineSymbols(MCAsmParser &Parser) {
   for (auto &I: DefineSymbol) {
-    auto Pair = StringRef(I).split('=');
-    auto Sym = Pair.first;
-    auto Val = Pair.second;
+    auto [Sym, Val] = StringRef(I).split('=');
+    
+    
 
     if (Sym.empty() || Val.empty()) {
       WithColor::error() << "defsym must be of the form: sym=value: " << I

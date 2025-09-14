@@ -1763,12 +1763,12 @@ makeStatepointExplicitImpl(CallBase *Call, /* to replace */
       };
 
       auto *Dest = CallArgs[0];
-      Value *DestBase, *DestOffset;
-      std::tie(DestBase, DestOffset) = GetBaseAndOffset(Dest);
+      
+      auto [DestBase, DestOffset] = GetBaseAndOffset(Dest);
 
       auto *Source = CallArgs[1];
-      Value *SourceBase, *SourceOffset;
-      std::tie(SourceBase, SourceOffset) = GetBaseAndOffset(Source);
+      
+      auto [SourceBase, SourceOffset] = GetBaseAndOffset(Source);
 
       auto *LengthInBytes = CallArgs[2];
       auto *ElementSizeCI = cast<ConstantInt>(CallArgs[3]);
@@ -2095,9 +2095,9 @@ static void relocationViaAlloca(
       // lots of gc.statepoints this is extremely costly both memory and time
       // wise.
       SmallVector<AllocaInst *, 64> ToClobber;
-      for (auto Pair : AllocaMap) {
-        Value *Def = Pair.first;
-        AllocaInst *Alloca = Pair.second;
+      for (auto [Def, Alloca] : AllocaMap) {
+        
+        
 
         // This value was relocated
         if (VisitedLiveValues.count(Def)) {
@@ -2131,9 +2131,9 @@ static void relocationViaAlloca(
   }
 
   // Update use with load allocas and add store for gc_relocated.
-  for (auto Pair : AllocaMap) {
-    Value *Def = Pair.first;
-    AllocaInst *Alloca = Pair.second;
+  for (auto [Def, Alloca] : AllocaMap) {
+    
+    
 
     // We pre-record the uses of allocas so that we dont have to worry about
     // later update that changes the user information..
@@ -2352,9 +2352,9 @@ findRematerializationCandidates(PointerToBaseTy PointerToBase,
                                 TargetTransformInfo &TTI) {
   const unsigned int ChainLengthThreshold = 10;
 
-  for (auto P2B : PointerToBase) {
-    auto *Derived = P2B.first;
-    auto *Base = P2B.second;
+  for (auto [Derived, Base] : PointerToBase) {
+    
+    
     // Consider only derived pointers.
     if (Derived == Base)
       continue;

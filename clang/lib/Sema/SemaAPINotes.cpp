@@ -836,9 +836,9 @@ static void maybeAttachUnversionedSwiftName(
     return;
 
   // Is the active slice versioned, and does it set a Swift name?
-  VersionTuple SelectedVersion;
-  SpecificInfo SelectedInfoSlice;
-  std::tie(SelectedVersion, SelectedInfoSlice) = Info[*Info.getSelected()];
+  
+  
+  auto [SelectedVersion, SelectedInfoSlice] = Info[*Info.getSelected()];
   if (SelectedVersion.empty())
     return;
   if (SelectedInfoSlice.SwiftName.empty())

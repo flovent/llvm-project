@@ -576,9 +576,9 @@ MCSectionELF *
 MCContext::createELFRelSection(const Twine &Name, unsigned Type, unsigned Flags,
                                unsigned EntrySize, const MCSymbolELF *Group,
                                const MCSectionELF *RelInfoSection) {
-  StringMap<bool>::iterator I;
-  bool Inserted;
-  std::tie(I, Inserted) = RelSecNames.insert(std::make_pair(Name.str(), true));
+  
+  
+  auto [I, Inserted] = RelSecNames.insert(std::make_pair(Name.str(), true));
 
   return createELFSectionImpl(
       I->getKey(), Type, Flags, EntrySize, Group, true, true,

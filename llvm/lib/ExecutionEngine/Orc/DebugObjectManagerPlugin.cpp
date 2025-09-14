@@ -294,8 +294,8 @@ ELFDebugObject::CreateArchType(MemoryBufferRef Buffer,
 Expected<std::unique_ptr<DebugObject>>
 ELFDebugObject::Create(MemoryBufferRef Buffer, JITLinkContext &Ctx,
                        ExecutionSession &ES) {
-  unsigned char Class, Endian;
-  std::tie(Class, Endian) = getElfArchType(Buffer.getBuffer());
+  
+  auto [Class, Endian] = getElfArchType(Buffer.getBuffer());
 
   if (Class == ELF::ELFCLASS32) {
     if (Endian == ELF::ELFDATA2LSB)

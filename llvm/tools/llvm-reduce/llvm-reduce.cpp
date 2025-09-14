@@ -186,9 +186,9 @@ int main(int Argc, char **Argv) {
     return 1;
   }
 
-  StringRef OutputFilename;
-  bool OutputBitcode;
-  std::tie(OutputFilename, OutputBitcode) =
+  
+  
+  auto [OutputFilename, OutputBitcode] =
       determineOutputType(ReduceModeMIR, InputIsBitcode);
 
   // Initialize test environment

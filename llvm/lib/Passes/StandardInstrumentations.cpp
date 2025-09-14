@@ -2024,9 +2024,9 @@ DotCfgDiff::DotCfgDiff(StringRef Title, const FuncDataT<DCData> &Before,
     StringRef S = E.getKey();
     auto SP1 = S.rsplit(' ');
     auto &SourceSink = SP1.first;
-    auto SP2 = SourceSink.split(' ');
-    StringRef Source = SP2.first;
-    StringRef Sink = SP2.second;
+    auto [Source, Sink] = SourceSink.split(' ');
+    
+    
     StringRef Value = SP1.second;
 
     assert(NodePosition.count(Source) == 1 && "Expected to find node.");

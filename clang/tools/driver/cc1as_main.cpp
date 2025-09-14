@@ -611,9 +611,9 @@ static bool ExecuteAssemblerImpl(AssemblerInvocation &Opts,
 
   // Set values for symbols, if any.
   for (auto &S : Opts.SymbolDefs) {
-    auto Pair = StringRef(S).split('=');
-    auto Sym = Pair.first;
-    auto Val = Pair.second;
+    auto [Sym, Val] = StringRef(S).split('=');
+    
+    
     int64_t Value;
     // We have already error checked this in the driver.
     Val.getAsInteger(0, Value);

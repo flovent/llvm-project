@@ -853,9 +853,9 @@ Error EHFrameParser::parse() {
   while (Data.isValidOffset(Offset)) {
     const uint64_t StartOffset = Offset;
 
-    uint64_t Length;
-    DwarfFormat Format;
-    std::tie(Length, Format) = Data.getInitialLength(&Offset);
+    
+    
+    auto [Length, Format] = Data.getInitialLength(&Offset);
 
     // If the Length is 0, then this CIE is a terminator
     if (Length == 0)

@@ -97,8 +97,8 @@ void ReturnUndefChecker::emitUndef(CheckerContext &C, const Expr *RetE) const {
 
 void ReturnUndefChecker::checkReference(CheckerContext &C, const Expr *RetE,
                                         DefinedOrUnknownSVal RetVal) const {
-  ProgramStateRef StNonNull, StNull;
-  std::tie(StNonNull, StNull) = C.getState()->assume(RetVal);
+  
+  auto [StNonNull, StNull] = C.getState()->assume(RetVal);
 
   if (StNonNull) {
     // Going forward, assume the location is non-null.

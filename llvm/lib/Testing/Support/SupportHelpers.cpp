@@ -33,9 +33,9 @@ static std::pair<bool, SmallString<128>> findSrcDirMap(StringRef Argv0) {
 }
 
 SmallString<128> llvm::unittest::getInputFileDirectory(const char *Argv0) {
-  bool Found = false;
-  SmallString<128> InputFilePath;
-  std::tie(Found, InputFilePath) = findSrcDirMap(Argv0);
+  
+  
+  auto [Found, InputFilePath] = findSrcDirMap(Argv0);
 
   EXPECT_TRUE(Found) << "Unit test source directory file does not exist.";
 

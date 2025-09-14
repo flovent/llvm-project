@@ -144,9 +144,9 @@ public:
     AffectedRangeMgr.computeAffectedLines(AnnotatedLines);
 
     const AdditionalKeywords &Keywords = Tokens.getKeywords();
-    SmallVector<JsModuleReference, 16> References;
-    AnnotatedLine *FirstNonImportLine;
-    std::tie(References, FirstNonImportLine) =
+    
+    
+    auto [References, FirstNonImportLine] =
         parseModuleReferences(Keywords, AnnotatedLines);
 
     if (References.empty())

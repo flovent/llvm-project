@@ -37,9 +37,9 @@ void CompileOnDemandLayer::emit(
   SymbolAliasMap NonCallables;
   SymbolAliasMap Callables;
 
-  for (auto &KV : R->getSymbols()) {
-    auto &Name = KV.first;
-    auto &Flags = KV.second;
+  for (const auto& [Name, Flags] : R->getSymbols()) {
+    
+    
     if (Flags.isCallable())
       Callables[Name] = SymbolAliasMapEntry(Name, Flags);
     else

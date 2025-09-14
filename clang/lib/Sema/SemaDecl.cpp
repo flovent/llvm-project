@@ -3725,9 +3725,9 @@ bool Sema::MergeFunctionDecl(FunctionDecl *New, NamedDecl *&OldD, Scope *S,
     return true;
   }
 
-  diag::kind PrevDiag;
-  SourceLocation OldLocation;
-  std::tie(PrevDiag, OldLocation) =
+  
+  
+  auto [PrevDiag, OldLocation] =
       getNoteDiagForInvalidRedeclaration(Old, New);
 
   // Don't complain about this if we're in GNU89 mode and the old function
@@ -4509,9 +4509,9 @@ static void diagnoseVarDeclTypeMismatch(Sema &S, VarDecl *New, VarDecl* Old) {
          : diag::err_redeclaration_different_type)
     << New->getDeclName() << New->getType() << Old->getType();
 
-  diag::kind PrevDiag;
-  SourceLocation OldLocation;
-  std::tie(PrevDiag, OldLocation)
+  
+  
+  auto [PrevDiag, OldLocation]
     = getNoteDiagForInvalidRedeclaration(Old, New);
   S.Diag(OldLocation, PrevDiag) << Old << Old->getType();
   New->setInvalidDecl();
@@ -4729,9 +4729,9 @@ void Sema::MergeVarDecl(VarDecl *New, LookupResult &Previous) {
   if (New->isInvalidDecl())
     return;
 
-  diag::kind PrevDiag;
-  SourceLocation OldLocation;
-  std::tie(PrevDiag, OldLocation) =
+  
+  
+  auto [PrevDiag, OldLocation] =
       getNoteDiagForInvalidRedeclaration(Old, New);
 
   // [dcl.stc]p8: Check if we have a non-static decl followed by a static.

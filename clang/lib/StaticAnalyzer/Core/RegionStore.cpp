@@ -1876,9 +1876,9 @@ std::optional<SVal> RegionStoreManager::getConstantValFromConstArrayInitializer(
   assert(R && "ElementRegion should not be null");
 
   // Treat an n-dimensional array.
-  SmallVector<SVal, 2> SValOffsets;
-  const MemRegion *Base;
-  std::tie(SValOffsets, Base) = getElementRegionOffsetsWithBase(R);
+  
+  
+  auto [SValOffsets, Base] = getElementRegionOffsetsWithBase(R);
   const VarRegion *VR = dyn_cast<VarRegion>(Base);
   if (!VR)
     return std::nullopt;
@@ -2237,9 +2237,9 @@ RegionStoreManager::getBindingForFieldOrElementCommon(RegionBindingsConstRef B,
   // getBindingForField if 'R' has a direct binding.
 
   // Lazy binding?
-  Store lazyBindingStore = nullptr;
-  const SubRegion *lazyBindingRegion = nullptr;
-  std::tie(lazyBindingStore, lazyBindingRegion) = findLazyBinding(B, R, R);
+  
+  
+  auto [lazyBindingStore, lazyBindingRegion] = findLazyBinding(B, R, R);
   if (lazyBindingRegion)
     return getLazyBinding(lazyBindingRegion,
                           getRegionBindings(lazyBindingStore));

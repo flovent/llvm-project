@@ -1906,8 +1906,8 @@ void RegisterCoalescer::updateRegDefsUses(Register SrcReg, Register DstReg,
       continue;
 
     SmallVector<unsigned, 8> Ops;
-    bool Reads, Writes;
-    std::tie(Reads, Writes) = UseMI->readsWritesVirtualRegister(SrcReg, &Ops);
+    
+    auto [Reads, Writes] = UseMI->readsWritesVirtualRegister(SrcReg, &Ops);
 
     // If SrcReg wasn't read, it may still be the case that DstReg is live-in
     // because SrcReg is a sub-register.
@@ -2776,15 +2776,15 @@ JoinVals::followCopyChain(const VNInfo *VNI) const {
 
 bool JoinVals::valuesIdentical(VNInfo *Value0, VNInfo *Value1,
                                const JoinVals &Other) const {
-  const VNInfo *Orig0;
-  Register Reg0;
-  std::tie(Orig0, Reg0) = followCopyChain(Value0);
+  
+  
+  auto [Orig0, Reg0] = followCopyChain(Value0);
   if (Orig0 == Value1 && Reg0 == Other.Reg)
     return true;
 
-  const VNInfo *Orig1;
-  Register Reg1;
-  std::tie(Orig1, Reg1) = Other.followCopyChain(Value1);
+  
+  
+  auto [Orig1, Reg1] = Other.followCopyChain(Value1);
   // If both values are undefined, and the source registers are the same
   // register, the values are identical. Filter out cases where only one
   // value is defined.

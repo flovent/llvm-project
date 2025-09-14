@@ -158,9 +158,9 @@ llvm::StringRef syntax::Token::text(const SourceManager &SM) const {
 
 FileRange syntax::Token::range(const SourceManager &SM) const {
   assert(location().isFileID() && "must be a spelled token");
-  FileID File;
-  unsigned StartOffset;
-  std::tie(File, StartOffset) = SM.getDecomposedLoc(location());
+  
+  
+  auto [File, StartOffset] = SM.getDecomposedLoc(location());
   return FileRange(File, StartOffset, StartOffset + length());
 }
 

@@ -145,9 +145,9 @@ void COFFDumper::dumpSections(unsigned NumSections) {
   StringMap<bool> SymbolUnique;
   for (const auto &S : Obj.symbols()) {
     StringRef Name = Err(Obj.getSymbolName(Obj.getCOFFSymbol(S)));
-    StringMap<bool>::iterator It;
-    bool Inserted;
-    std::tie(It, Inserted) = SymbolUnique.insert(std::make_pair(Name, true));
+    
+    
+    auto [It, Inserted] = SymbolUnique.insert(std::make_pair(Name, true));
     if (!Inserted)
       It->second = false;
   }

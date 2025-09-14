@@ -223,9 +223,9 @@ Error StreamedHTTPResponseHandler::commit() {
 
 // An over-accepting simplification of the HTTP RFC 7230 spec.
 static bool isHeader(StringRef S) {
-  StringRef Name;
-  StringRef Value;
-  std::tie(Name, Value) = S.split(':');
+  
+  
+  auto [Name, Value] = S.split(':');
   if (Name.empty() || Value.empty())
     return false;
   return all_of(Name, [](char C) { return llvm::isPrint(C) && C != ' '; }) &&

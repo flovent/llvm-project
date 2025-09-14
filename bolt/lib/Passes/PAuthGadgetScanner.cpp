@@ -442,9 +442,9 @@ protected:
       Regs.push_back(*AutReg);
 
     if (CheckerSequenceInfo.contains(&Point)) {
-      MCPhysReg CheckedReg;
-      const MCInst *FirstCheckerInst;
-      std::tie(CheckedReg, FirstCheckerInst) = CheckerSequenceInfo.at(&Point);
+      
+      
+      auto [CheckedReg, FirstCheckerInst] = CheckerSequenceInfo.at(&Point);
 
       // FirstCheckerInst should belong to the same basic block (see the
       // assertion in DataflowSrcSafetyAnalysis::run()), meaning it was
@@ -1040,8 +1040,8 @@ protected:
 
     // ... an address can be updated in a safe manner, or
     if (auto DstAndSrc = BC.MIB->analyzeAddressArithmeticsForPtrAuth(Inst)) {
-      MCPhysReg DstReg, SrcReg;
-      std::tie(DstReg, SrcReg) = *DstAndSrc;
+      
+      auto [DstReg, SrcReg] = *DstAndSrc;
       // Note that *all* registers containing the derived values must be safe,
       // both source and destination ones. No temporaries are supported at now.
       if (Cur.CannotEscapeUnchecked[SrcReg] &&

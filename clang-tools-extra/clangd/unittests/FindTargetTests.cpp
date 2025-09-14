@@ -1331,9 +1331,9 @@ protected:
         Pos = SM.getExpansionLoc(Pos);
       assert(Pos.isFileID());
 
-      FileID File;
-      unsigned Offset;
-      std::tie(File, Offset) = SM.getDecomposedLoc(Pos);
+      
+      
+      auto [File, Offset] = SM.getDecomposedLoc(Pos);
       if (File == SM.getMainFileID()) {
         // Print the reference in a source code.
         assert(NextCodeChar <= Offset);

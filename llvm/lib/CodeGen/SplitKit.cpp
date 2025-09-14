@@ -215,8 +215,8 @@ void SplitAnalysis::calcLiveBlockInfo() {
   while (true) {
     BlockInfo BI;
     BI.MBB = &*MFI;
-    SlotIndex Start, Stop;
-    std::tie(Start, Stop) = LIS.getSlotIndexes()->getMBBRange(BI.MBB);
+    
+    auto [Start, Stop] = LIS.getSlotIndexes()->getMBBRange(BI.MBB);
 
     // If the block contains no uses, the range must be live through. At one
     // point, RegisterCoalescer could create dangling ranges that ended
@@ -1222,8 +1222,8 @@ bool SplitEditor::transferValues() {
       // so the live range is accurate. Add live-in blocks in [Start;End) to the
       // LiveInBlocks.
       MachineFunction::iterator MBB = LIS.getMBBFromIndex(Start)->getIterator();
-      SlotIndex BlockStart, BlockEnd;
-      std::tie(BlockStart, BlockEnd) = LIS.getSlotIndexes()->getMBBRange(&*MBB);
+      
+      auto [BlockStart, BlockEnd] = LIS.getSlotIndexes()->getMBBRange(&*MBB);
 
       // The first block may be live-in, or it may have its own def.
       if (Start != BlockStart) {
@@ -1670,8 +1670,8 @@ void SplitEditor::splitSingleBlock(const SplitAnalysis::BlockInfo &BI) {
 void SplitEditor::splitLiveThroughBlock(unsigned MBBNum,
                                         unsigned IntvIn, SlotIndex LeaveBefore,
                                         unsigned IntvOut, SlotIndex EnterAfter){
-  SlotIndex Start, Stop;
-  std::tie(Start, Stop) = LIS.getSlotIndexes()->getMBBRange(MBBNum);
+  
+  auto [Start, Stop] = LIS.getSlotIndexes()->getMBBRange(MBBNum);
 
   LLVM_DEBUG(dbgs() << "%bb." << MBBNum << " [" << Start << ';' << Stop
                     << ") intf " << LeaveBefore << '-' << EnterAfter
@@ -1772,8 +1772,8 @@ void SplitEditor::splitLiveThroughBlock(unsigned MBBNum,
 
 void SplitEditor::splitRegInBlock(const SplitAnalysis::BlockInfo &BI,
                                   unsigned IntvIn, SlotIndex LeaveBefore) {
-  SlotIndex Start, Stop;
-  std::tie(Start, Stop) = LIS.getSlotIndexes()->getMBBRange(BI.MBB);
+  
+  auto [Start, Stop] = LIS.getSlotIndexes()->getMBBRange(BI.MBB);
 
   LLVM_DEBUG(dbgs() << printMBBReference(*BI.MBB) << " [" << Start << ';'
                     << Stop << "), uses " << BI.FirstInstr << '-'
@@ -1865,8 +1865,8 @@ void SplitEditor::splitRegInBlock(const SplitAnalysis::BlockInfo &BI,
 
 void SplitEditor::splitRegOutBlock(const SplitAnalysis::BlockInfo &BI,
                                    unsigned IntvOut, SlotIndex EnterAfter) {
-  SlotIndex Start, Stop;
-  std::tie(Start, Stop) = LIS.getSlotIndexes()->getMBBRange(BI.MBB);
+  
+  auto [Start, Stop] = LIS.getSlotIndexes()->getMBBRange(BI.MBB);
 
   LLVM_DEBUG(dbgs() << printMBBReference(*BI.MBB) << " [" << Start << ';'
                     << Stop << "), uses " << BI.FirstInstr << '-'

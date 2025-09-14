@@ -135,8 +135,8 @@ bool llvm::MachO::isPrivateLibrary(StringRef Path, bool IsSymLink) {
 
   // "/System/Library/Frameworks/" is a public location.
   if (Path.starts_with("/System/Library/Frameworks/")) {
-    StringRef Name, Rest;
-    std::tie(Name, Rest) =
+    
+    auto [Name, Rest] =
         Path.drop_front(sizeof("/System/Library/Frameworks")).split('.');
 
     // Allow symlinks to top-level frameworks.

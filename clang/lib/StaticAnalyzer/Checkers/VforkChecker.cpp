@@ -171,8 +171,8 @@ void VforkChecker::checkPostCall(const CallEvent &Call,
       : (const MemRegion *)VFORK_RESULT_NONE;
 
   // Parent branch gets nonzero return value (according to manpage).
-  ProgramStateRef ParentState, ChildState;
-  std::tie(ParentState, ChildState) = C.getState()->assume(*DVal);
+  
+  auto [ParentState, ChildState] = C.getState()->assume(*DVal);
   C.addTransition(ParentState);
   ChildState = ChildState->set<VforkResultRegion>(LhsDeclReg);
   C.addTransition(ChildState);

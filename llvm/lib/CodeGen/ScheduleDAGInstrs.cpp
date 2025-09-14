@@ -377,9 +377,9 @@ void ScheduleDAGInstrs::addPhysRegDeps(SUnit *SU, unsigned OperIdx) {
       // the block. Instead, we leave only one call at the back of the
       // DefList.
       for (MCRegUnit Unit : TRI->regunits(Reg)) {
-        RegUnit2SUnitsMap::RangePair P = Defs.equal_range(Unit);
-        RegUnit2SUnitsMap::iterator B = P.first;
-        RegUnit2SUnitsMap::iterator I = P.second;
+        auto [B, I] = Defs.equal_range(Unit);
+        
+        
         for (bool isBegin = I == B; !isBegin; /* empty */) {
           isBegin = (--I) == B;
           if (!I->SU->isCall)

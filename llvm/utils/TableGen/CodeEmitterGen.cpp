@@ -520,8 +520,8 @@ void CodeEmitterGen::run(raw_ostream &O) {
     const Record *R = CGI->TheDef;
     std::string InstName =
         (R->getValueAsString("Namespace") + "::" + R->getName()).str();
-    std::string Case, BitOffsetCase;
-    std::tie(Case, BitOffsetCase) = getInstructionCases(R, Target);
+    
+    auto [Case, BitOffsetCase] = getInstructionCases(R, Target);
 
     CaseMap[Case].push_back(InstName);
     BitOffsetCaseMap[BitOffsetCase].push_back(std::move(InstName));

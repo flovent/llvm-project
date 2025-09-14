@@ -616,8 +616,8 @@ SVal SValBuilder::evalIntegralCast(ProgramStateRef state, SVal val,
   QualType CmpTy = getConditionType();
   NonLoc CompVal = evalBinOpNN(state, BO_LE, *AsNonLoc, ToTypeMaxVal, CmpTy)
                        .castAs<NonLoc>();
-  ProgramStateRef IsNotTruncated, IsTruncated;
-  std::tie(IsNotTruncated, IsTruncated) = state->assume(CompVal);
+  
+  auto [IsNotTruncated, IsTruncated] = state->assume(CompVal);
   if (!IsNotTruncated && IsTruncated) {
     // Symbol is truncated so we evaluate it as a cast.
     return makeNonLoc(AsSymbol, originalTy, castTy);

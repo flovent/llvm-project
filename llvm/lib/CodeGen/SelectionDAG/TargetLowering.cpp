@@ -8115,8 +8115,8 @@ bool TargetLowering::expandDIVREMByConstant(SDNode *N,
                                    DAG.getConstant(MulFactor, dl, VT));
 
     // Split the quotient into low and high parts.
-    SDValue QuotL, QuotH;
-    std::tie(QuotL, QuotH) = DAG.SplitScalar(Quotient, dl, HiLoVT, HiLoVT);
+    
+    auto [QuotL, QuotH] = DAG.SplitScalar(Quotient, dl, HiLoVT, HiLoVT);
     Result.push_back(QuotL);
     Result.push_back(QuotH);
   }
@@ -11561,8 +11561,8 @@ SDValue TargetLowering::expandVecReduce(SDNode *Node, SelectionDAG &DAG) const {
       if (!isOperationLegalOrCustom(BaseOpcode, HalfVT))
         break;
 
-      SDValue Lo, Hi;
-      std::tie(Lo, Hi) = DAG.SplitVector(Op, dl);
+      
+      auto [Lo, Hi] = DAG.SplitVector(Op, dl);
       Op = DAG.getNode(BaseOpcode, dl, HalfVT, Lo, Hi, Node->getFlags());
       VT = HalfVT;
 

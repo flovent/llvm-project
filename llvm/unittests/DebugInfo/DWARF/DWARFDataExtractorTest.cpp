@@ -72,9 +72,9 @@ TEST(DWARFDataExtractorTest, getInitialLength) {
       -> Expected<std::tuple<uint64_t, dwarf::DwarfFormat, uint64_t>> {
     DWARFDataExtractor Data(Bytes, /*IsLittleEndian=*/false, /*AddressSize=*/8);
     DWARFDataExtractor::Cursor C(0);
-    uint64_t Length;
-    dwarf::DwarfFormat Format;
-    std::tie(Length, Format) = Data.getInitialLength(C);
+    
+    
+    auto [Length, Format] = Data.getInitialLength(C);
     if (C)
       return std::make_tuple(Length, Format, C.tell());
 
@@ -86,9 +86,9 @@ TEST(DWARFDataExtractorTest, getInitialLength) {
   auto GetWithoutError = [](ArrayRef<uint8_t> Bytes) {
     DWARFDataExtractor Data(Bytes, /*IsLittleEndian=*/false, /*AddressSize=*/8);
     uint64_t Offset = 0;
-    uint64_t Length;
-    dwarf::DwarfFormat Format;
-    std::tie(Length, Format) = Data.getInitialLength(&Offset);
+    
+    
+    auto [Length, Format] = Data.getInitialLength(&Offset);
     return std::make_tuple(Length, Format, Offset);
   };
   auto ErrorResult = std::make_tuple(0, dwarf::DWARF32, 0);

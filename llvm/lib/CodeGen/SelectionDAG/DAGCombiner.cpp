@@ -23069,9 +23069,9 @@ static bool mergeEltWithShuffle(SDValue &X, SDValue &Y, ArrayRef<int> Mask,
   ArgWorkList.emplace_back(0, X);
 
   while (!ArgWorkList.empty()) {
-    int ArgOffset;
-    SDValue ArgVal;
-    std::tie(ArgOffset, ArgVal) = ArgWorkList.pop_back_val();
+    
+    
+    auto [ArgOffset, ArgVal] = ArgWorkList.pop_back_val();
 
     if (ArgVal == InsertVal0) {
       ElementOffset = ArgOffset;

@@ -127,9 +127,9 @@ void TypeReferenceTracker::addReferencedTypes(ArrayRef<uint8_t> RecData,
 
 void TypeReferenceTracker::markReferencedTypes() {
   while (!RefWorklist.empty()) {
-    TiRefKind RefKind;
-    TypeIndex RefTI;
-    std::tie(RefKind, RefTI) = RefWorklist.pop_back_val();
+    
+    
+    auto [RefKind, RefTI] = RefWorklist.pop_back_val();
     std::optional<CVType> Rec = (Ids && RefKind == TiRefKind::IndexRef)
                                     ? Ids->tryGetType(RefTI)
                                     : Types.tryGetType(RefTI);

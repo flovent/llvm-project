@@ -2730,9 +2730,9 @@ void Preprocessor::HandleIncludeNextDirective(SourceLocation HashLoc,
                                               Token &IncludeNextTok) {
   Diag(IncludeNextTok, diag::ext_pp_include_next_directive);
 
-  ConstSearchDirIterator Lookup = nullptr;
-  const FileEntry *LookupFromFile;
-  std::tie(Lookup, LookupFromFile) = getIncludeNextStart(IncludeNextTok);
+  
+  
+  auto [Lookup, LookupFromFile] = getIncludeNextStart(IncludeNextTok);
 
   return HandleIncludeDirective(HashLoc, IncludeNextTok, Lookup,
                                 LookupFromFile);

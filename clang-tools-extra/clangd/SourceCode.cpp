@@ -213,9 +213,9 @@ Position offsetToPosition(llvm::StringRef Code, size_t Offset) {
 
 Position sourceLocToPosition(const SourceManager &SM, SourceLocation Loc) {
   // We use the SourceManager's line tables, but its column number is in bytes.
-  FileID FID;
-  unsigned Offset;
-  std::tie(FID, Offset) = SM.getDecomposedSpellingLoc(Loc);
+  
+  
+  auto [FID, Offset] = SM.getDecomposedSpellingLoc(Loc);
   Position P;
   P.line = static_cast<int>(SM.getLineNumber(FID, Offset)) - 1;
   bool Invalid = false;
@@ -250,22 +250,22 @@ bool isValidFileRange(const SourceManager &Mgr, SourceRange R) {
   if (!R.getBegin().isValid() || !R.getEnd().isValid())
     return false;
 
-  FileID BeginFID;
-  size_t BeginOffset = 0;
-  std::tie(BeginFID, BeginOffset) = Mgr.getDecomposedLoc(R.getBegin());
+  
+  
+  auto [BeginFID, BeginOffset] = Mgr.getDecomposedLoc(R.getBegin());
 
-  FileID EndFID;
-  size_t EndOffset = 0;
-  std::tie(EndFID, EndOffset) = Mgr.getDecomposedLoc(R.getEnd());
+  
+  
+  auto [EndFID, EndOffset] = Mgr.getDecomposedLoc(R.getEnd());
 
   return BeginFID.isValid() && BeginFID == EndFID && BeginOffset <= EndOffset;
 }
 
 SourceLocation includeHashLoc(FileID IncludedFile, const SourceManager &SM) {
   assert(SM.getLocForEndOfFile(IncludedFile).isFileID());
-  FileID IncludingFile;
-  unsigned Offset;
-  std::tie(IncludingFile, Offset) =
+  
+  
+  auto [IncludingFile, Offset] =
       SM.getDecomposedExpansionLoc(SM.getIncludeLoc(IncludedFile));
   bool Invalid = false;
   llvm::StringRef Buf = SM.getBufferData(IncludingFile, &Invalid);
@@ -967,9 +967,9 @@ std::optional<SpelledWord> SpelledWord::touching(SourceLocation SpelledLoc,
       return Result;
     }
   }
-  FileID File;
-  unsigned Offset;
-  std::tie(File, Offset) = SM.getDecomposedLoc(SpelledLoc);
+  
+  
+  auto [File, Offset] = SM.getDecomposedLoc(SpelledLoc);
   bool Invalid = false;
   llvm::StringRef Code = SM.getBufferData(File, &Invalid);
   if (Invalid)

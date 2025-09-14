@@ -904,10 +904,10 @@ parseLowerAllowCheckPassOptions(StringRef Params) {
     // It would technically be in spec to specify
     //   cutoffs[0]=70000,cutoffs[1]=90000,cutoffs[0]=80000,...
     if (ParamName.starts_with("cutoffs[")) {
-      StringRef IndicesStr;
-      StringRef CutoffStr;
+      
+      
 
-      std::tie(IndicesStr, CutoffStr) = ParamName.split("]=");
+      auto [IndicesStr, CutoffStr] = ParamName.split("]=");
       //       cutoffs[1,2,3
       //                   70000
 
@@ -1476,9 +1476,9 @@ parseBoundsCheckingOptions(StringRef Params) {
     } else if (ParamName == "merge") {
       Options.Merge = true;
     } else {
-      StringRef ParamEQ;
-      StringRef Val;
-      std::tie(ParamEQ, Val) = ParamName.split('=');
+      
+      
+      auto [ParamEQ, Val] = ParamName.split('=');
       int8_t Id;
       if (ParamEQ == "guard" && !Val.getAsInteger(0, Id)) {
         Options.GuardKind = Id;

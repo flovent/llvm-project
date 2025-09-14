@@ -1698,8 +1698,8 @@ static void mergeSampleProfile(const WeightedFileVector &Inputs,
 }
 
 static WeightedFile parseWeightedFile(const StringRef &WeightedFilename) {
-  StringRef WeightStr, FileName;
-  std::tie(WeightStr, FileName) = WeightedFilename.split(',');
+  
+  auto [WeightStr, FileName] = WeightedFilename.split(',');
 
   uint64_t Weight;
   if (WeightStr.getAsInteger(10, Weight) || Weight < 1)

@@ -455,9 +455,9 @@ bool LoadStoreOpt::processMergeCandidate(StoreMergeCandidate &C) {
   SmallVector<GStore *> StoresToMerge;
 
   auto DoesStoreAliasWithPotential = [&](unsigned Idx, GStore &CheckStore) {
-    for (auto AliasInfo : reverse(C.PotentialAliases)) {
-      MachineInstr *PotentialAliasOp = AliasInfo.first;
-      unsigned PreCheckedIdx = AliasInfo.second;
+    for (auto [PotentialAliasOp, PreCheckedIdx] : reverse(C.PotentialAliases)) {
+      
+      
       if (Idx < PreCheckedIdx) {
         // Once our store index is lower than the index associated with the
         // potential alias, we know that we've already checked for this alias

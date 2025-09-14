@@ -205,8 +205,8 @@ void ExprEngine::VisitObjCMessage(const ObjCMessageExpr *ME,
           recVal.castAs<DefinedOrUnknownSVal>();
       ProgramStateRef State = Pred->getState();
 
-      ProgramStateRef notNilState, nilState;
-      std::tie(notNilState, nilState) = State->assume(receiverVal);
+      
+      auto [notNilState, nilState] = State->assume(receiverVal);
 
       // Receiver is definitely nil, so run ObjCMessageNil callbacks and return.
       if (nilState && !notNilState) {

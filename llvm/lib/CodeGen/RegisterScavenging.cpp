@@ -302,10 +302,10 @@ Register RegScavenger::scavengeRegisterBackwards(const TargetRegisterClass &RC,
   // Find the register whose use is furthest away.
   MachineBasicBlock::iterator UseMI;
   ArrayRef<MCPhysReg> AllocationOrder = RC.getRawAllocationOrder(MF);
-  std::pair<MCPhysReg, MachineBasicBlock::iterator> P = findSurvivorBackwards(
+  auto [Reg, SpillBefore] = findSurvivorBackwards(
       *MRI, std::prev(MBBI), To, LiveUnits, AllocationOrder, RestoreAfter);
-  MCPhysReg Reg = P.first;
-  MachineBasicBlock::iterator SpillBefore = P.second;
+  
+  
   // Found an available register?
   if (Reg != 0 && SpillBefore == MBB.end()) {
     LLVM_DEBUG(dbgs() << "Scavenged free register: " << printReg(Reg, TRI)

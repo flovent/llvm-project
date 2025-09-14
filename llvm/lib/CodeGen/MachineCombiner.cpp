@@ -536,8 +536,8 @@ void MachineCombiner::verifyPatternOrder(MachineBasicBlock *MBB,
     if (InsInstrs.empty() || !TSchedModel.hasInstrSchedModelOrItineraries())
       continue;
 
-    unsigned NewRootLatency, RootLatency;
-    std::tie(NewRootLatency, RootLatency) = getLatenciesForInstrSequences(
+    
+    auto [NewRootLatency, RootLatency] = getLatenciesForInstrSequences(
         Root, InsInstrs, DelInstrs, TraceEnsemble->getTrace(MBB));
     long CurrentLatencyDiff = ((long)RootLatency) - ((long)NewRootLatency);
     assert(CurrentLatencyDiff <= PrevLatencyDiff &&

@@ -304,8 +304,8 @@ CXXABI::MemberPointerInfo MicrosoftCXXABI::getMemberPointerInfo(
   unsigned PtrSize = Target.getPointerWidth(LangAS::Default);
   unsigned IntSize = Target.getIntWidth();
 
-  unsigned Ptrs, Ints;
-  std::tie(Ptrs, Ints) = getMSMemberPointerSlots(MPT);
+  
+  auto [Ptrs, Ints] = getMSMemberPointerSlots(MPT);
   MemberPointerInfo MPI;
   MPI.HasPadding = false;
   MPI.Width = Ptrs * PtrSize + Ints * IntSize;

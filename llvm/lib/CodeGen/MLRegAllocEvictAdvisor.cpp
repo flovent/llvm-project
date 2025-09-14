@@ -906,8 +906,8 @@ MLEvictAdvisor::getLIFeatureComponents(const LiveInterval &LI) const {
     if (MI->isIdentityCopy() || MI->isImplicitDef())
       continue;
 
-    bool Reads, Writes;
-    std::tie(Reads, Writes) = MI->readsWritesVirtualRegister(LI.reg());
+    
+    auto [Reads, Writes] = MI->readsWritesVirtualRegister(LI.reg());
 
     float Freq = MBFI.getBlockFreqRelativeToEntryBlock(MI->getParent());
     Ret.HottestBlockFreq = std::max(Freq, Ret.HottestBlockFreq);

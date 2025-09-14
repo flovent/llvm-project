@@ -45,9 +45,9 @@ static Error extractPartAsObject(StringRef PartName, StringRef OutFilename,
 static Error handleArgs(const CommonConfig &Config, Object &Obj) {
   // Extract all sections before any modifications.
   for (StringRef Flag : Config.ExtractSection) {
-    StringRef SectionName;
-    StringRef FileName;
-    std::tie(SectionName, FileName) = Flag.split('=');
+    
+    
+    auto [SectionName, FileName] = Flag.split('=');
     if (Error E = extractPartAsObject(SectionName, FileName,
                                       Config.InputFilename, Obj))
       return E;

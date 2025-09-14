@@ -590,8 +590,8 @@ Error CheckLargeFunctions::runOnFunctions(BinaryContext &BC) {
   // If the function wouldn't fit, mark it as non-simple. Otherwise, we may emit
   // incorrect meta data.
   ParallelUtilities::WorkFuncTy WorkFun = [&](BinaryFunction &BF) {
-    uint64_t HotSize, ColdSize;
-    std::tie(HotSize, ColdSize) =
+    
+    auto [HotSize, ColdSize] =
         BC.calculateEmittedSize(BF, /*FixBranches=*/false);
     uint64_t MainFragmentSize = HotSize;
     if (BF.hasIslandsInfo()) {
@@ -1203,10 +1203,10 @@ bool SimplifyRODataLoads::simplifyRODataLoads(BinaryFunction &BF) {
                "found PC-relative with non-symbolic displacement");
 
         // Get displacement symbol.
-        const MCSymbol *DisplSymbol;
-        uint64_t DisplOffset;
+        
+        
 
-        std::tie(DisplSymbol, DisplOffset) =
+        auto [DisplSymbol, DisplOffset] =
             MIB->getTargetSymbolInfo(DispOpI->getExpr());
 
         if (!DisplSymbol)

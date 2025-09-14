@@ -161,18 +161,18 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "__jit_debug_descriptor.last_entry = 0x%016" PRIx64 "\n",
             pointerToJITTargetAddress(findLastDebugDescriptorEntryPtr()));
 
-  StringRef SpecifierType, Specifier;
-  std::tie(SpecifierType, Specifier) = NextArg.split('=');
+  
+  auto [SpecifierType, Specifier] = NextArg.split('=');
   if (SpecifierType == "filedescs") {
-    StringRef FD1Str, FD2Str;
-    std::tie(FD1Str, FD2Str) = Specifier.split(',');
+    
+    auto [FD1Str, FD2Str] = Specifier.split(',');
     if (FD1Str.getAsInteger(10, InFD))
       printErrorAndExit(FD1Str + " is not a valid file descriptor");
     if (FD2Str.getAsInteger(10, OutFD))
       printErrorAndExit(FD2Str + " is not a valid file descriptor");
   } else if (SpecifierType == "listen") {
-    StringRef Host, PortStr;
-    std::tie(Host, PortStr) = Specifier.split(':');
+    
+    auto [Host, PortStr] = Specifier.split(':');
 
     int Port = 0;
     if (PortStr.getAsInteger(10, Port))

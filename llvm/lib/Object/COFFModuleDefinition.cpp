@@ -345,8 +345,8 @@ private:
     read();
     if (Tok.K != Identifier)
       return createError("identifier expected, but got " + Tok.Value);
-    StringRef V1, V2;
-    std::tie(V1, V2) = Tok.Value.split('.');
+    
+    auto [V1, V2] = Tok.Value.split('.');
     if (V1.getAsInteger(10, *Major))
       return createError("integer expected, but got " + Tok.Value);
     if (V2.empty())

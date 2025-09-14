@@ -174,8 +174,8 @@ void NonNullParamChecker::checkPreCall(const CallEvent &Call,
     }
 
     ConstraintManager &CM = C.getConstraintManager();
-    ProgramStateRef stateNotNull, stateNull;
-    std::tie(stateNotNull, stateNull) = CM.assumeDual(state, *DV);
+    
+    auto [stateNotNull, stateNull] = CM.assumeDual(state, *DV);
 
     // Generate an error node.  Check for a null node in case
     // we cache out.

@@ -93,9 +93,9 @@ public:
     if (BaselinePad.isZero())
       return;
 
-    CharUnits OptimalPad;
-    SmallVector<const FieldDecl *, 20> OptimalFieldsOrder;
-    std::tie(OptimalPad, OptimalFieldsOrder) =
+    
+    
+    auto [OptimalPad, OptimalFieldsOrder] =
         calculateOptimalPad(RD, ASTContext, RL);
 
     CharUnits DiffPad = PadMultiplier * (BaselinePad - OptimalPad);

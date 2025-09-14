@@ -2066,8 +2066,8 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
             // Figure out maximal valid memcpy alignment.
             const Align ArgAlign = DL.getValueOrABITypeAlignment(
                 FArg.getParamAlign(), FArg.getParamByValType());
-            Value *CpShadowPtr, *CpOriginPtr;
-            std::tie(CpShadowPtr, CpOriginPtr) =
+            
+            auto [CpShadowPtr, CpOriginPtr] =
                 getShadowOriginPtr(V, EntryIRB, EntryIRB.getInt8Ty(), ArgAlign,
                                    /*isStore*/ true);
             if (!PropagateShadow || Overflow) {
@@ -3171,11 +3171,11 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     IRBuilder<> IRB(&I);
     Value *Addr = I.getArgOperand(0);
     Value *Shadow = getShadow(&I, 1);
-    Value *ShadowPtr, *OriginPtr;
+    
 
     // We don't know the pointer alignment (could be unaligned SSE store!).
     // Have to assume to worst case.
-    std::tie(ShadowPtr, OriginPtr) = getShadowOriginPtr(
+    auto [ShadowPtr, OriginPtr] = getShadowOriginPtr(
         Addr, IRB, Shadow->getType(), Align(1), /*isStore*/ true);
     IRB.CreateAlignedStore(Shadow, ShadowPtr, Align(1));
 
@@ -4122,8 +4122,8 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     Value *Addr = I.getArgOperand(0);
     Type *Ty = IRB.getInt32Ty();
     const Align Alignment = Align(1);
-    Value *ShadowPtr, *OriginPtr;
-    std::tie(ShadowPtr, OriginPtr) =
+    
+    auto [ShadowPtr, OriginPtr] =
         getShadowOriginPtr(Addr, IRB, Ty, Alignment, /*isStore*/ false);
 
     if (ClCheckAccessAddress)
@@ -4275,9 +4275,9 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
       insertCheckShadowOf(Mask, &I);
     }
 
-    Value *ShadowPtr;
-    Value *OriginPtr;
-    std::tie(ShadowPtr, OriginPtr) = getShadowOriginPtr(
+    
+    
+    auto [ShadowPtr, OriginPtr] = getShadowOriginPtr(
         Ptr, IRB, Shadow->getType(), Alignment, /*isStore*/ true);
 
     IRB.CreateMaskedStore(Shadow, ShadowPtr, Alignment, Mask);
@@ -4315,8 +4315,8 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     }
 
     Type *ShadowTy = getShadowTy(&I);
-    Value *ShadowPtr, *OriginPtr;
-    std::tie(ShadowPtr, OriginPtr) =
+    
+    auto [ShadowPtr, OriginPtr] =
         getShadowOriginPtr(Ptr, IRB, ShadowTy, Alignment, /*isStore*/ false);
     setShadow(&I, IRB.CreateMaskedLoad(ShadowTy, ShadowPtr, Alignment, Mask,
                                        getShadow(PassThru), "_msmaskedld"));
@@ -4372,9 +4372,9 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
       insertCheckShadowOf(Mask, &I);
     }
 
-    Value *DstShadowPtr;
-    Value *DstOriginPtr;
-    std::tie(DstShadowPtr, DstOriginPtr) = getShadowOriginPtr(
+    
+    
+    auto [DstShadowPtr, DstOriginPtr] = getShadowOriginPtr(
         Dst, IRB, SrcShadow->getType(), Alignment, /*isStore*/ true);
 
     SmallVector<Value *, 2> ShadowArgs;
@@ -4433,8 +4433,8 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     }
 
     Type *SrcShadowTy = getShadowTy(Src);
-    Value *SrcShadowPtr, *SrcOriginPtr;
-    std::tie(SrcShadowPtr, SrcOriginPtr) =
+    
+    auto [SrcShadowPtr, SrcOriginPtr] =
         getShadowOriginPtr(Src, IRB, SrcShadowTy, Alignment, /*isStore*/ false);
 
     SmallVector<Value *, 2> ShadowArgs;
@@ -5177,9 +5177,9 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
       ShadowArgs.append(1,
                         I.getArgOperand(numArgOperands - skipTrailingOperands));
 
-    Value *OutputShadowPtr, *OutputOriginPtr;
+    
     // AArch64 NEON does not need alignment (unless OS requires it)
-    std::tie(OutputShadowPtr, OutputOriginPtr) = getShadowOriginPtr(
+    auto [OutputShadowPtr, OutputOriginPtr] = getShadowOriginPtr(
         Addr, IRB, OutputShadowTy, Align(1), /*isStore*/ true);
     ShadowArgs.append(1, OutputShadowPtr);
 
@@ -6325,8 +6325,8 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     CB.setArgOperand(3, NewOrdering);
 
     NextNodeIRBuilder NextIRB(&CB);
-    Value *SrcShadowPtr, *SrcOriginPtr;
-    std::tie(SrcShadowPtr, SrcOriginPtr) =
+    
+    auto [SrcShadowPtr, SrcOriginPtr] =
         getShadowOriginPtr(SrcPtr, NextIRB, NextIRB.getInt8Ty(), Align(1),
                            /*isStore*/ false);
     Value *DstShadowPtr =
@@ -6471,8 +6471,8 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
           MaybeAlign Alignment = std::nullopt;
           if (ParamAlignment)
             Alignment = std::min(*ParamAlignment, kShadowTLSAlignment);
-          Value *AShadowPtr, *AOriginPtr;
-          std::tie(AShadowPtr, AOriginPtr) =
+          
+          auto [AShadowPtr, AOriginPtr] =
               getShadowOriginPtr(A, IRB, IRB.getInt8Ty(), Alignment,
                                  /*isStore*/ false);
           if (!PropagateShadow) {
@@ -6642,8 +6642,8 @@ struct MemorySanitizerVisitor : public InstVisitor<MemorySanitizerVisitor> {
     if (PoisonStack && ClPoisonStackWithCall) {
       IRB.CreateCall(MS.MsanPoisonStackFn, {&I, Len});
     } else {
-      Value *ShadowBase, *OriginBase;
-      std::tie(ShadowBase, OriginBase) = getShadowOriginPtr(
+      
+      auto [ShadowBase, OriginBase] = getShadowOriginPtr(
           &I, IRB, IRB.getInt8Ty(), Align(1), /*isStore*/ true);
 
       Value *PoisonValue = IRB.getInt8(PoisonStack ? ClPoisonStackPattern : 0);
@@ -7109,8 +7109,8 @@ struct VarArgAMD64Helper : public VarArgHelperBase {
           continue; // We have no space to copy shadow there.
         }
 
-        Value *ShadowPtr, *OriginPtr;
-        std::tie(ShadowPtr, OriginPtr) =
+        
+        auto [ShadowPtr, OriginPtr] =
             MSV.getShadowOriginPtr(A, IRB, IRB.getInt8Ty(), kShadowTLSAlignment,
                                    /*isStore*/ false);
         IRB.CreateMemCpy(ShadowBase, kShadowTLSAlignment, ShadowPtr,
@@ -7233,8 +7233,8 @@ struct VarArgAMD64Helper : public VarArgHelperBase {
           MS.PtrTy);
       Value *OverflowArgAreaPtr =
           IRB.CreateLoad(MS.PtrTy, OverflowArgAreaPtrPtr);
-      Value *OverflowArgAreaShadowPtr, *OverflowArgAreaOriginPtr;
-      std::tie(OverflowArgAreaShadowPtr, OverflowArgAreaOriginPtr) =
+      
+      auto [OverflowArgAreaShadowPtr, OverflowArgAreaOriginPtr] =
           MSV.getShadowOriginPtr(OverflowArgAreaPtr, IRB, IRB.getInt8Ty(),
                                  Alignment, /*isStore*/ true);
       Value *SrcPtr = IRB.CreateConstGEP1_32(IRB.getInt8Ty(), VAArgTLSCopy,
@@ -7536,8 +7536,8 @@ struct VarArgPowerPC64Helper : public VarArgHelperBase {
           Value *Base =
               getShadowPtrForVAArgument(IRB, VAArgOffset - VAArgBase, ArgSize);
           if (Base) {
-            Value *AShadowPtr, *AOriginPtr;
-            std::tie(AShadowPtr, AOriginPtr) =
+            
+            auto [AShadowPtr, AOriginPtr] =
                 MSV.getShadowOriginPtr(A, IRB, IRB.getInt8Ty(),
                                        kShadowTLSAlignment, /*isStore*/ false);
 
@@ -7666,8 +7666,8 @@ struct VarArgPowerPC32Helper : public VarArgHelperBase {
           Value *Base =
               getShadowPtrForVAArgument(IRB, VAArgOffset - VAArgBase, ArgSize);
           if (Base) {
-            Value *AShadowPtr, *AOriginPtr;
-            std::tie(AShadowPtr, AOriginPtr) =
+            
+            auto [AShadowPtr, AOriginPtr] =
                 MSV.getShadowOriginPtr(A, IRB, IRB.getInt8Ty(),
                                        kShadowTLSAlignment, /*isStore*/ false);
 
@@ -7772,8 +7772,8 @@ struct VarArgPowerPC32Helper : public VarArgHelperBase {
       const Align Alignment = Align(IntptrSize);
 
       { // Copy reg save area
-        Value *RegSaveAreaShadowPtr, *RegSaveAreaOriginPtr;
-        std::tie(RegSaveAreaShadowPtr, RegSaveAreaOriginPtr) =
+        
+        auto [RegSaveAreaShadowPtr, RegSaveAreaOriginPtr] =
             MSV.getShadowOriginPtr(RegSaveAreaPtr, IRB, IRB.getInt8Ty(),
                                    Alignment, /*isStore*/ true);
         IRB.CreateMemCpy(RegSaveAreaShadowPtr, Alignment, VAArgTLSCopy,
@@ -7801,8 +7801,8 @@ struct VarArgPowerPC32Helper : public VarArgHelperBase {
 
         Value *OverflowAreaPtr = IRB.CreateLoad(MS.PtrTy, OverflowAreaPtrPtr);
 
-        Value *OverflowAreaShadowPtr, *OverflowAreaOriginPtr;
-        std::tie(OverflowAreaShadowPtr, OverflowAreaOriginPtr) =
+        
+        auto [OverflowAreaShadowPtr, OverflowAreaOriginPtr] =
             MSV.getShadowOriginPtr(OverflowAreaPtr, IRB, IRB.getInt8Ty(),
                                    Alignment, /*isStore*/ true);
 
@@ -8128,8 +8128,8 @@ struct VarArgI386Helper : public VarArgHelperBase {
         if (!IsFixed) {
           Value *Base = getShadowPtrForVAArgument(IRB, VAArgOffset, ArgSize);
           if (Base) {
-            Value *AShadowPtr, *AOriginPtr;
-            std::tie(AShadowPtr, AOriginPtr) =
+            
+            auto [AShadowPtr, AOriginPtr] =
                 MSV.getShadowOriginPtr(A, IRB, IRB.getInt8Ty(),
                                        kShadowTLSAlignment, /*isStore*/ false);
 

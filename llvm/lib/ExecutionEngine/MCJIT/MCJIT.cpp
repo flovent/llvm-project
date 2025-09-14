@@ -126,9 +126,9 @@ void MCJIT::addObjectFile(std::unique_ptr<object::ObjectFile> Obj) {
 }
 
 void MCJIT::addObjectFile(object::OwningBinary<object::ObjectFile> Obj) {
-  std::unique_ptr<object::ObjectFile> ObjFile;
-  std::unique_ptr<MemoryBuffer> MemBuf;
-  std::tie(ObjFile, MemBuf) = Obj.takeBinary();
+  
+  
+  auto [ObjFile, MemBuf] = Obj.takeBinary();
   addObjectFile(std::move(ObjFile));
   Buffers.push_back(std::move(MemBuf));
 }

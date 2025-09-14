@@ -655,8 +655,8 @@ static std::optional<EstimatedUnrollCost> analyzeLoopUnrollCost(
   }
 
   while (!ExitWorklist.empty()) {
-    BasicBlock *ExitingBB, *ExitBB;
-    std::tie(ExitingBB, ExitBB) = ExitWorklist.pop_back_val();
+    
+    auto [ExitingBB, ExitBB] = ExitWorklist.pop_back_val();
 
     for (Instruction &I : *ExitBB) {
       auto *PN = dyn_cast<PHINode>(&I);

@@ -88,8 +88,8 @@ void DAGTypeLegalizer::ExpandRes_BITCAST(SDNode *N, SDValue &Lo, SDValue &Hi) {
     case TargetLowering::TypeWidenVector: {
       assert(!(InVT.getVectorNumElements() & 1) && "Unsupported BITCAST");
       InOp = GetWidenedVector(InOp);
-      EVT LoVT, HiVT;
-      std::tie(LoVT, HiVT) = DAG.GetSplitDestVTs(InVT);
+      
+      auto [LoVT, HiVT] = DAG.GetSplitDestVTs(InVT);
       std::tie(Lo, Hi) = DAG.SplitVector(InOp, dl, LoVT, HiVT);
       if (TLI.hasBigEndianPartOrdering(OutVT, DAG.getDataLayout()))
         std::swap(Lo, Hi);
@@ -562,8 +562,8 @@ void DAGTypeLegalizer::SplitRes_Select(SDNode *N, SDValue &Lo, SDValue &Hi) {
     return;
   }
 
-  SDValue EVLLo, EVLHi;
-  std::tie(EVLLo, EVLHi) =
+  
+  auto [EVLLo, EVLHi] =
       DAG.SplitEVL(N->getOperand(3), N->getValueType(0), dl);
 
   Lo = DAG.getNode(Opcode, dl, LL.getValueType(), CL, LL, RL, EVLLo);
@@ -584,8 +584,8 @@ void DAGTypeLegalizer::SplitRes_SELECT_CC(SDNode *N, SDValue &Lo,
 }
 
 void DAGTypeLegalizer::SplitRes_UNDEF(SDNode *N, SDValue &Lo, SDValue &Hi) {
-  EVT LoVT, HiVT;
-  std::tie(LoVT, HiVT) = DAG.GetSplitDestVTs(N->getValueType(0));
+  
+  auto [LoVT, HiVT] = DAG.GetSplitDestVTs(N->getValueType(0));
   Lo = DAG.getUNDEF(LoVT);
   Hi = DAG.getUNDEF(HiVT);
 }

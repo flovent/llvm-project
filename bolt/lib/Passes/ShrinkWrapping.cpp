@@ -231,8 +231,8 @@ void StackLayoutModifier::checkFramePointerInitialization(MCInst &Point) {
            .hasDefOfPhysReg(Point, BC.MIB->getFramePointer(), *BC.MRI))
     return;
 
-  int SPVal, FPVal;
-  std::tie(SPVal, FPVal) = *SPT.getStateBefore(Point);
+  
+  auto [SPVal, FPVal] = *SPT.getStateBefore(Point);
   std::pair<MCPhysReg, int64_t> FP;
 
   if (FPVal != SPT.EMPTY && FPVal != SPT.SUPERPOSITION)
@@ -269,8 +269,8 @@ void StackLayoutModifier::checkStackPointerRestore(MCInst &Point) {
     return;
 
   // Setting up evaluation
-  int SPVal, FPVal;
-  std::tie(SPVal, FPVal) = *SPT.getStateBefore(Point);
+  
+  auto [SPVal, FPVal] = *SPT.getStateBefore(Point);
   std::pair<MCPhysReg, int64_t> FP;
 
   if (FPVal != SPT.EMPTY && FPVal != SPT.SUPERPOSITION)

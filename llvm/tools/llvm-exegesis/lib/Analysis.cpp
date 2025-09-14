@@ -206,9 +206,9 @@ Analysis::makePointsPerSchedClass() const {
     // FIXME: we should be using the tuple of classes for instructions in the
     // snippet as key.
     const MCInst &MCI = Point.keyInstruction();
-    unsigned SchedClassId;
-    bool WasVariant;
-    std::tie(SchedClassId, WasVariant) =
+    
+    
+    auto [SchedClassId, WasVariant] =
         ResolvedSchedClass::resolveSchedClassId(State_.getSubtargetInfo(),
                                                 State_.getInstrInfo(), MCI);
     const auto IndexIt = SchedClassIdToIndex.find(SchedClassId);

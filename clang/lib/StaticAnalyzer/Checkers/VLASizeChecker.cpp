@@ -165,8 +165,8 @@ ProgramStateRef VLASizeChecker::checkVLAIndexSize(CheckerContext &C,
   // Check if the size is zero.
   DefinedSVal SizeD = SizeV.castAs<DefinedSVal>();
 
-  ProgramStateRef StateNotZero, StateZero;
-  std::tie(StateNotZero, StateZero) = State->assume(SizeD);
+  
+  auto [StateNotZero, StateZero] = State->assume(SizeD);
 
   if (StateZero && !StateNotZero) {
     reportBug(VLA_Zero, SizeE, StateZero, C);

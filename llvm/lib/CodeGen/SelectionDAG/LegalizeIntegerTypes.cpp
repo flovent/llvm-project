@@ -5503,8 +5503,8 @@ void DAGTypeLegalizer::ExpandIntRes_READ_REGISTER(SDNode *N, SDValue &Lo,
   Fn.getContext().diagnose(DiagnosticInfoLegalizationFailure(
       "cannot use llvm.read_register with illegal type", Fn, N->getDebugLoc()));
   ReplaceValueWith(SDValue(N, 1), N->getOperand(0));
-  EVT LoVT, HiVT;
-  std::tie(LoVT, HiVT) = DAG.GetSplitDestVTs(N->getValueType(0));
+  
+  auto [LoVT, HiVT] = DAG.GetSplitDestVTs(N->getValueType(0));
   Lo = DAG.getPOISON(LoVT);
   Hi = DAG.getPOISON(HiVT);
 }

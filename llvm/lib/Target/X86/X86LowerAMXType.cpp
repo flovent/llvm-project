@@ -451,8 +451,8 @@ bool X86LowerAMXType::transformBitcast(BitCastInst *Bitcast) {
     Prepare(Bitcast->getOperand(0)->getType());
     Builder.CreateStore(Src, AllocaAddr);
     // TODO we can pick an constant operand for the shape.
-    Value *Row = nullptr, *Col = nullptr;
-    std::tie(Row, Col) = SC->getShape(II, OpNo);
+    
+    auto [Row, Col] = SC->getShape(II, OpNo);
     std::array<Value *, 4> Args = {Row, Col, I8Ptr, Stride};
     Value *NewInst =
         Builder.CreateIntrinsic(Intrinsic::x86_tileloadd64_internal, Args);
@@ -928,8 +928,8 @@ bool X86LowerAMXCast::optimizeAMXCastFromPhi(
         auto *IncConst = dyn_cast<Constant>(IncValue);
         if (!isa<UndefValue>(IncValue) && !IncConst->isZeroValue())
           return false;
-        Value *Row = nullptr, *Col = nullptr;
-        std::tie(Row, Col) = SC->getShape(OldPN);
+        
+        auto [Row, Col] = SC->getShape(OldPN);
         // TODO: If it is not constant the Row and Col must domoniate tilezero
         // that we are going to create.
         if (!Row || !Col || !isa<Constant>(Row) || !isa<Constant>(Col))
@@ -1351,8 +1351,8 @@ bool X86LowerAMXCast::transformAMXCast(IntrinsicInst *AMXCast) {
     Prepare(AMXCast->getOperand(0)->getType());
     Builder.CreateStore(Src, AllocaAddr);
     // TODO we can pick an constant operand for the shape.
-    Value *Row = nullptr, *Col = nullptr;
-    std::tie(Row, Col) = SC->getShape(II, OpNo);
+    
+    auto [Row, Col] = SC->getShape(II, OpNo);
     std::array<Value *, 4> Args = {
         Row, Col, I8Ptr, Builder.CreateSExt(Col, Builder.getInt64Ty())};
     Value *NewInst =

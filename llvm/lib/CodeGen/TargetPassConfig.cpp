@@ -439,8 +439,8 @@ static AnalysisID getPassIDFromName(StringRef PassName) {
 
 static std::pair<StringRef, unsigned>
 getPassNameAndInstanceNum(StringRef PassName) {
-  StringRef Name, InstanceNumStr;
-  std::tie(Name, InstanceNumStr) = PassName.split(',');
+  
+  auto [Name, InstanceNumStr] = PassName.split(',');
 
   unsigned InstanceNum = 0;
   if (!InstanceNumStr.empty() && InstanceNumStr.getAsInteger(10, InstanceNum))

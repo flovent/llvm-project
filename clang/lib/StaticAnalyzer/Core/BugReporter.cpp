@@ -2661,9 +2661,9 @@ BugPathGetter::BugPathGetter(const ExplodedGraph *OriginalGraph,
     const ExplodedNode *Node = WS.front();
     WS.pop();
 
-    PriorityMapTy::iterator PriorityEntry;
-    bool IsNew;
-    std::tie(PriorityEntry, IsNew) = PriorityMap.insert({Node, Priority});
+    
+    
+    auto [PriorityEntry, IsNew] = PriorityMap.insert({Node, Priority});
     ++Priority;
 
     if (!IsNew) {

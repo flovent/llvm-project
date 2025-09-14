@@ -318,8 +318,8 @@ static void reservePreviousStackSlotForValue(const Value *IncomingValue,
 static std::pair<SDValue, SDNode *> lowerCallFromStatepointLoweringInfo(
     SelectionDAGBuilder::StatepointLoweringInfo &SI,
     SelectionDAGBuilder &Builder) {
-  SDValue ReturnValue, CallEndVal;
-  std::tie(ReturnValue, CallEndVal) =
+  
+  auto [ReturnValue, CallEndVal] =
       Builder.lowerInvokable(SI.CLI, SI.EHPadBB);
   SDNode *CallEnd = CallEndVal.getNode();
 
@@ -742,9 +742,9 @@ SDValue SelectionDAGBuilder::LowerAsSTATEPOINT(
   SI.CLI.setChain(getRoot());
 
   // Get call node, we will replace it later with statepoint
-  SDValue ReturnVal;
-  SDNode *CallNode;
-  std::tie(ReturnVal, CallNode) = lowerCallFromStatepointLoweringInfo(SI, *this);
+  
+  
+  auto [ReturnVal, CallNode] = lowerCallFromStatepointLoweringInfo(SI, *this);
 
   // Construct the actual GC_TRANSITION_START, STATEPOINT, and GC_TRANSITION_END
   // nodes with all the appropriate arguments and return values.

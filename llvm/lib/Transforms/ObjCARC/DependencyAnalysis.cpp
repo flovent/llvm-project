@@ -213,10 +213,10 @@ static bool findDependencies(DependenceKind Flavor, const Value *Arg,
   SmallVector<std::pair<BasicBlock *, BasicBlock::iterator>, 4> Worklist;
   Worklist.push_back(std::make_pair(StartBB, StartPos));
   do {
-    std::pair<BasicBlock *, BasicBlock::iterator> Pair =
+    auto [LocalStartBB, LocalStartPos] =
       Worklist.pop_back_val();
-    BasicBlock *LocalStartBB = Pair.first;
-    BasicBlock::iterator LocalStartPos = Pair.second;
+    
+    
     BasicBlock::iterator StartBBBegin = LocalStartBB->begin();
     for (;;) {
       if (LocalStartPos == StartBBBegin) {

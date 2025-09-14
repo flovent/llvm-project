@@ -508,9 +508,9 @@ private:
                                const std::vector<CallInfo> &CoverCalls) {
     // Populate BinaryBasicBlock::OutputAddressRange with estimated
     // new start and end addresses after hot-warm splitting at SplitIndex.
-    size_t OldHotEnd;
-    size_t NewHotEnd;
-    std::tie(OldHotEnd, NewHotEnd) =
+    
+    
+    auto [OldHotEnd, NewHotEnd] =
         estimatePostSplitBBAddress(BlockOrder, SplitIndex);
 
     SplitScore Score;

@@ -284,8 +284,8 @@ void UnixAPIMisuseChecker::CheckOpenVariant(CheckerContext &C,
   DefinedSVal maskedFlags = maskedFlagsUC.castAs<DefinedSVal>();
 
   // Check if maskedFlags is non-zero.
-  ProgramStateRef trueState, falseState;
-  std::tie(trueState, falseState) = state->assume(maskedFlags);
+  
+  auto [trueState, falseState] = state->assume(maskedFlags);
 
   // Only emit an error if the value of 'maskedFlags' is properly
   // constrained;

@@ -81,8 +81,8 @@ llvm::parseCachePruningPolicy(StringRef PolicyStr) {
   while (!P.second.empty()) {
     P = P.second.split(':');
 
-    StringRef Key, Value;
-    std::tie(Key, Value) = P.first.split('=');
+    
+    auto [Key, Value] = P.first.split('=');
     if (Key == "prune_interval") {
       auto DurationOrErr = parseDuration(Value);
       if (!DurationOrErr)

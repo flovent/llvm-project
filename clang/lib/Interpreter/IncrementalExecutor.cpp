@@ -331,8 +331,8 @@ IncrementalExecutor::connectTCPSocket(llvm::StringRef NetworkAddress,
         llvm::inconvertibleErrorCode());
   };
 
-  StringRef Host, PortStr;
-  std::tie(Host, PortStr) = NetworkAddress.split(':');
+  
+  auto [Host, PortStr] = NetworkAddress.split(':');
   if (Host.empty())
     return CreateErr("Host name for -" + NetworkAddress + " can not be empty");
   if (PortStr.empty())

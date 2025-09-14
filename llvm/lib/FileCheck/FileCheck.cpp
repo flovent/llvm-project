@@ -1882,9 +1882,9 @@ bool FileCheck::readCheckFile(
     Check::FileCheckType CheckTy;
 
     // See if a prefix occurs in the memory buffer.
-    StringRef UsedPrefix;
-    StringRef AfterSuffix;
-    std::tie(UsedPrefix, AfterSuffix) =
+    
+    
+    auto [UsedPrefix, AfterSuffix] =
         FindFirstMatchingPrefix(Req, Matcher, Buffer, LineNumber, CheckTy);
     if (UsedPrefix.empty())
       break;

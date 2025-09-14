@@ -129,8 +129,8 @@ void ObjCContainersChecker::checkPreStmt(const CallExpr *CE,
 
     // Now, check if 'Idx in [0, Size-1]'.
     const QualType T = IdxExpr->getType();
-    ProgramStateRef StInBound, StOutBound;
-    std::tie(StInBound, StOutBound) = State->assumeInBoundDual(Idx, *Size, T);
+    
+    auto [StInBound, StOutBound] = State->assumeInBoundDual(Idx, *Size, T);
     if (StOutBound && !StInBound) {
       ExplodedNode *N = C.generateErrorNode(StOutBound);
       if (!N)

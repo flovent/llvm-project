@@ -1403,8 +1403,8 @@ static Loop *cloneLoopNest(Loop &OrigRootL, Loop *RootParentL,
   for (Loop *ChildL : llvm::reverse(OrigRootL))
     LoopsToClone.push_back({ClonedRootL, ChildL});
   do {
-    Loop *ClonedParentL, *L;
-    std::tie(ClonedParentL, L) = LoopsToClone.pop_back_val();
+    
+    auto [ClonedParentL, L] = LoopsToClone.pop_back_val();
     Loop *ClonedL = LI.AllocateLoop();
     ClonedParentL->addChildLoop(ClonedL);
     AddClonedBlocksToLoop(*L, *ClonedL);

@@ -973,8 +973,8 @@ static Expected<std::unique_ptr<ExecutorProcessControl>> connectToExecutor() {
       inconvertibleErrorCode());
 #else
 
-  StringRef Host, PortStr;
-  std::tie(Host, PortStr) = StringRef(OutOfProcessExecutorConnect).split(':');
+  
+  auto [Host, PortStr] = StringRef(OutOfProcessExecutorConnect).split(':');
   if (Host.empty())
     return createTCPSocketError("Host name for -" +
                                 OutOfProcessExecutorConnect.ArgStr +

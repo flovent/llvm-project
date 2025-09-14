@@ -1089,9 +1089,9 @@ bool DevirtModule::tryFindVirtualCallTargets(
         GlobalObject::VCallVisibilityPublic)
       return false;
 
-    Function *Fn = nullptr;
-    Constant *C = nullptr;
-    std::tie(Fn, C) =
+    
+    
+    auto [Fn, C] =
         getFunctionAtVTableOffset(TM.Bits->GV, TM.Offset + ByteOffset, M);
 
     if (!Fn)

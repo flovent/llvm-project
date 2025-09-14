@@ -70,10 +70,10 @@ bool formatAndApplyAllReplacements(
   FileManager &Files = SM.getFileManager();
 
   bool Result = true;
-  for (const auto &FileAndReplaces : groupReplacementsByFile(
+  for (const auto& [FilePath, CurReplaces] : groupReplacementsByFile(
            Rewrite.getSourceMgr().getFileManager(), FileToReplaces)) {
-    const std::string &FilePath = FileAndReplaces.first;
-    auto &CurReplaces = FileAndReplaces.second;
+    
+    
 
     FileEntryRef Entry = llvm::cantFail(Files.getFileRef(FilePath));
     FileID ID = SM.getOrCreateFileID(Entry, SrcMgr::C_User);

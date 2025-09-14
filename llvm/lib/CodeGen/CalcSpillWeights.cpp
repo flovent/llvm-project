@@ -274,8 +274,8 @@ float VirtRegAuxInfo::weightCalcHelper(LiveInterval &LI, SlotIndex *Start,
       }
 
       // Calculate instr weight.
-      bool Reads, Writes;
-      std::tie(Reads, Writes) = MI->readsWritesVirtualRegister(LI.reg());
+      
+      auto [Reads, Writes] = MI->readsWritesVirtualRegister(LI.reg());
       Weight = LiveIntervals::getSpillWeight(Writes, Reads, &MBFI, *MI, PSI);
 
       // Give extra weight to what looks like a loop induction variable update.

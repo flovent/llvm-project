@@ -701,9 +701,9 @@ void llvm::calculateClrEHStateNumbers(const Function *Fn,
   // for setting the EHPadStateMap entry for all catchpads, cleanuppads, and
   // catchswitches.
   while (!Worklist.empty()) {
-    const Instruction *Pad;
-    int HandlerParentState;
-    std::tie(Pad, HandlerParentState) = Worklist.pop_back_val();
+    
+    
+    auto [Pad, HandlerParentState] = Worklist.pop_back_val();
 
     if (const auto *Cleanup = dyn_cast<CleanupPadInst>(Pad)) {
       // Create the entry for this cleanup with the appropriate handler
@@ -1315,9 +1315,9 @@ void WinEHPrepareImpl::insertPHIStores(PHINode *OriginalPHI,
   Worklist.push_back({OriginalPHI->getParent(), OriginalPHI});
 
   while (!Worklist.empty()) {
-    BasicBlock *EHBlock;
-    Value *InVal;
-    std::tie(EHBlock, InVal) = Worklist.pop_back_val();
+    
+    
+    auto [EHBlock, InVal] = Worklist.pop_back_val();
 
     PHINode *PN = dyn_cast<PHINode>(InVal);
     if (PN && PN->getParent() == EHBlock) {

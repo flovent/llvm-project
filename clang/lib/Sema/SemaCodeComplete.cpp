@@ -5047,8 +5047,8 @@ static void AddLambdaCompletion(ResultBuilder &Results,
       constexpr llvm::StringLiteral NamePlaceholder = "!#!NAME_GOES_HERE!#!";
       std::string Type = std::string(NamePlaceholder);
       Parameter.getAsStringInternal(Type, PrintingPolicy(LangOpts));
-      llvm::StringRef Prefix, Suffix;
-      std::tie(Prefix, Suffix) = llvm::StringRef(Type).split(NamePlaceholder);
+      
+      auto [Prefix, Suffix] = llvm::StringRef(Type).split(NamePlaceholder);
       Prefix = Prefix.rtrim();
       Suffix = Suffix.ltrim();
 

@@ -83,9 +83,9 @@ void MapperJITLinkMemoryManager::allocate(const JITLinkDylib *JD, LinkGraph &G,
 
     std::vector<MemoryMapper::AllocInfo::SegInfo> SegInfos;
 
-    for (auto &KV : BL.segments()) {
-      auto &AG = KV.first;
-      auto &Seg = KV.second;
+    for (auto& [AG, Seg] : BL.segments()) {
+      
+      
 
       auto TotalSize = Seg.ContentSize + Seg.ZeroFillSize;
 

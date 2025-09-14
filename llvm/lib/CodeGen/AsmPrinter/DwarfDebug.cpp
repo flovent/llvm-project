@@ -2349,9 +2349,9 @@ DwarfDebug::emitInitialLocDirective(const MachineFunction &MF, unsigned CUID) {
   if (llvm::all_of(MF, [](const MachineBasicBlock &MBB) { return MBB.empty(); }))
     return nullptr;
 
-  std::pair<const MachineInstr *, bool> PrologEnd = findPrologueEndLoc(&MF);
-  const MachineInstr *PrologEndLoc = PrologEnd.first;
-  bool IsEmptyPrologue = PrologEnd.second;
+  auto [PrologEndLoc, IsEmptyPrologue] = findPrologueEndLoc(&MF);
+  
+  
 
   // If the prolog is empty, no need to generate scope line for the proc.
   if (IsEmptyPrologue) {

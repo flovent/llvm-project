@@ -503,8 +503,8 @@ RISCVISAInfo::parseNormalizedArchString(StringRef Arch) {
     StringRef Ext = Arch.slice(0, Idx);
     Arch = Arch.substr(Idx);
 
-    StringRef Prefix, MinorVersionStr;
-    std::tie(Prefix, MinorVersionStr) = Ext.rsplit('p');
+    
+    auto [Prefix, MinorVersionStr] = Ext.rsplit('p');
     if (MinorVersionStr.empty())
       return getError("extension lacks version in expected format");
     unsigned MajorVersion, MinorVersion;

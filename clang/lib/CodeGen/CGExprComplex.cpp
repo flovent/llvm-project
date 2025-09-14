@@ -879,8 +879,8 @@ ComplexPairTy ComplexExprEmitter::EmitBinMul(const BinOpInfo &Op) {
 
       // Now emit the libcall on this slowest of the slow paths.
       CGF.EmitBlock(LibCallBB);
-      Value *LibCallR, *LibCallI;
-      std::tie(LibCallR, LibCallI) = EmitComplexBinOpLibCall(
+      
+      auto [LibCallR, LibCallI] = EmitComplexBinOpLibCall(
           getComplexMultiplyLibCallName(Op.LHS.first->getType()), Op);
       Builder.CreateBr(ContBB);
 

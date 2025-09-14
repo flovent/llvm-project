@@ -366,8 +366,8 @@ ProgramStateRef CallAndMessageChecker::checkFunctionPointerCall(
     return nullptr;
   }
 
-  ProgramStateRef StNonNull, StNull;
-  std::tie(StNonNull, StNull) = State->assume(L.castAs<DefinedOrUnknownSVal>());
+  
+  auto [StNonNull, StNull] = State->assume(L.castAs<DefinedOrUnknownSVal>());
 
   if (StNull && !StNonNull) {
     if (!ChecksEnabled[CK_FunctionPointer]) {
@@ -428,8 +428,8 @@ ProgramStateRef CallAndMessageChecker::checkCXXMethodCall(
     return nullptr;
   }
 
-  ProgramStateRef StNonNull, StNull;
-  std::tie(StNonNull, StNull) = State->assume(V.castAs<DefinedOrUnknownSVal>());
+  
+  auto [StNonNull, StNull] = State->assume(V.castAs<DefinedOrUnknownSVal>());
 
   if (StNull && !StNonNull) {
     if (!ChecksEnabled[CK_CXXThisMethodCall]) {

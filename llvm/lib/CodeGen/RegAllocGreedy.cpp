@@ -2216,18 +2216,18 @@ MCRegister RAGreedy::tryLastChanceRecoloring(
     // reassigning, since sub-recolorings may have conflicted with the registers
     // we are going to restore to their original assignments.
     for (ssize_t I = RecolorStack.size() - 1; I >= EntryStackSize; --I) {
-      const LiveInterval *LI;
-      MCRegister PhysReg;
-      std::tie(LI, PhysReg) = RecolorStack[I];
+      
+      
+      auto [LI, PhysReg] = RecolorStack[I];
 
       if (VRM->hasPhys(LI->reg()))
         Matrix->unassign(*LI);
     }
 
     for (size_t I = EntryStackSize; I != RecolorStack.size(); ++I) {
-      const LiveInterval *LI;
-      MCRegister PhysReg;
-      std::tie(LI, PhysReg) = RecolorStack[I];
+      
+      
+      auto [LI, PhysReg] = RecolorStack[I];
       if (!LI->empty() && !MRI->reg_nodbg_empty(LI->reg()))
         Matrix->assign(*LI, PhysReg);
     }

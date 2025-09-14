@@ -984,9 +984,9 @@ Intrinsic::Intrinsic(StringRef Name, StringRef Proto, uint64_t MergeTy,
 
   // Types[0] is the return value.
   for (unsigned I = 0; I < (getNumParams() + 1); ++I) {
-    char Mod;
-    unsigned NumVectors;
-    std::tie(Mod, NumVectors) = getProtoModifier(Proto, I);
+    
+    
+    auto [Mod, NumVectors] = getProtoModifier(Proto, I);
     SVEType T(BaseTypeSpec, Mod, NumVectors);
     Types.push_back(T);
     SetsFPMR = T.isFpm();

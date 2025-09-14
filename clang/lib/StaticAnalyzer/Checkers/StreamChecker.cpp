@@ -939,8 +939,8 @@ void StreamChecker::evalFopen(const FnDescription *Desc, const CallEvent &Call,
 
   // Bifurcate the state into two: one with a valid FILE* pointer, the other
   // with a NULL.
-  ProgramStateRef StateNotNull, StateNull;
-  std::tie(StateNotNull, StateNull) =
+  
+  auto [StateNotNull, StateNull] =
       C.getConstraintManager().assumeDual(State, RetVal);
 
   StateNotNull =
@@ -1343,8 +1343,8 @@ void StreamChecker::evalFprintf(const FnDescription *Desc,
           .getAs<DefinedOrUnknownSVal>();
   if (!Cond)
     return;
-  ProgramStateRef StateNotFailed, StateFailed;
-  std::tie(StateNotFailed, StateFailed) = State->assume(*Cond);
+  
+  auto [StateNotFailed, StateFailed] = State->assume(*Cond);
 
   StateNotFailed =
       E.setStreamState(StateNotFailed, StreamState::getOpened(Desc));
@@ -1638,8 +1638,8 @@ void StreamChecker::preFflush(const FnDescription *Desc, const CallEvent &Call,
   if (!Stream)
     return;
 
-  ProgramStateRef StateNotNull, StateNull;
-  std::tie(StateNotNull, StateNull) =
+  
+  auto [StateNotNull, StateNull] =
       C.getConstraintManager().assumeDual(State, *Stream);
   if (StateNotNull && !StateNull)
     ensureStreamOpened(StreamVal, C, StateNotNull);
@@ -1654,8 +1654,8 @@ void StreamChecker::evalFflush(const FnDescription *Desc, const CallEvent &Call,
     return;
 
   // Skip if the stream can be both NULL and non-NULL.
-  ProgramStateRef StateNotNull, StateNull;
-  std::tie(StateNotNull, StateNull) =
+  
+  auto [StateNotNull, StateNull] =
       C.getConstraintManager().assumeDual(State, *Stream);
   if (StateNotNull && StateNull)
     return;
@@ -1819,8 +1819,8 @@ StreamChecker::ensureStreamNonNull(SVal StreamVal, const Expr *StreamE,
 
   ConstraintManager &CM = C.getConstraintManager();
 
-  ProgramStateRef StateNotNull, StateNull;
-  std::tie(StateNotNull, StateNull) = CM.assumeDual(State, *Stream);
+  
+  auto [StateNotNull, StateNull] = CM.assumeDual(State, *Stream);
 
   if (!StateNotNull && StateNull) {
     if (ExplodedNode *N = C.generateErrorNode(StateNull)) {

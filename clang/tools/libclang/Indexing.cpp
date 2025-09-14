@@ -212,9 +212,9 @@ private:
     if (RegionLoc.isInvalid())
       return Bail();
 
-    FileID RegionFID;
-    unsigned RegionOffset;
-    std::tie(RegionFID, RegionOffset) =
+    
+    
+    auto [RegionFID, RegionOffset] =
         PPRec.getSourceManager().getDecomposedLoc(RegionLoc);
 
     if (RegionFID != FID)

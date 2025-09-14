@@ -1789,9 +1789,9 @@ void BlockDataRegion::LazyInitializeReferencedVars() {
   auto *BVOriginal = new (A) VarVec(BC, NumBlockVars);
 
   for (const auto *VD : ReferencedBlockVars) {
-    const VarRegion *VR = nullptr;
-    const VarRegion *OriginalVR = nullptr;
-    std::tie(VR, OriginalVR) = getCaptureRegions(VD);
+    
+    
+    auto [VR, OriginalVR] = getCaptureRegions(VD);
     assert(VR);
     assert(OriginalVR);
     BV->push_back(VR, BC);

@@ -1081,9 +1081,9 @@ bool RegAllocFastImpl::defineVirtReg(MachineInstr &MI, unsigned OpNum,
   if (!shouldAllocateRegister(VirtReg))
     return false;
   MachineOperand &MO = MI.getOperand(OpNum);
-  LiveRegMap::iterator LRI;
-  bool New;
-  std::tie(LRI, New) = LiveVirtRegs.insert(LiveReg(VirtReg));
+  
+  
+  auto [LRI, New] = LiveVirtRegs.insert(LiveReg(VirtReg));
   if (New) {
     if (!MO.isDead()) {
       if (mayLiveOut(VirtReg)) {
@@ -1149,9 +1149,9 @@ bool RegAllocFastImpl::useVirtReg(MachineInstr &MI, MachineOperand &MO,
   assert(VirtReg.isVirtual() && "Not a virtual register");
   if (!shouldAllocateRegister(VirtReg))
     return false;
-  LiveRegMap::iterator LRI;
-  bool New;
-  std::tie(LRI, New) = LiveVirtRegs.insert(LiveReg(VirtReg));
+  
+  
+  auto [LRI, New] = LiveVirtRegs.insert(LiveReg(VirtReg));
   if (New) {
     if (!MO.isKill()) {
       if (mayLiveOut(VirtReg)) {

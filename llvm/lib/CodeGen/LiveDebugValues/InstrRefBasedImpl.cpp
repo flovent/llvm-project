@@ -2645,11 +2645,11 @@ void InstrRefBasedLDV::placeMLocPHIs(
       InstallPHIsAtLoc(L);
 
       // Find anything that aliases this stack index, install PHIs for it too.
-      unsigned Size, Offset;
-      std::tie(Size, Offset) = MTracker->StackIdxesToPos[Idx];
+      
+      auto [Size, Offset] = MTracker->StackIdxesToPos[Idx];
       for (auto &Pair : MTracker->StackSlotIdxes) {
-        unsigned ThisSize, ThisOffset;
-        std::tie(ThisSize, ThisOffset) = Pair.first;
+        
+        auto [ThisSize, ThisOffset] = Pair.first;
         if (ThisSize + ThisOffset <= Offset || Size + Offset <= ThisOffset)
           continue;
 
@@ -4148,10 +4148,10 @@ std::optional<ValueIDNum> InstrRefBasedLDV::resolveDbgPHIsImpl(
     const FuncValueTable &MLiveIns, MachineInstr &Here, uint64_t InstrNum) {
   // Pick out records of DBG_PHI instructions that have been observed. If there
   // are none, then we cannot compute a value number.
-  auto RangePair = std::equal_range(DebugPHINumToValue.begin(),
+  auto [LowerIt, UpperIt] = std::equal_range(DebugPHINumToValue.begin(),
                                     DebugPHINumToValue.end(), InstrNum);
-  auto LowerIt = RangePair.first;
-  auto UpperIt = RangePair.second;
+  
+  
 
   // No DBG_PHI means there can be no location.
   if (LowerIt == UpperIt)

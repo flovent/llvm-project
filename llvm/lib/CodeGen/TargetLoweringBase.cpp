@@ -1591,9 +1591,9 @@ void TargetLoweringBase::computeRegisterProperties(
   // a group of value types. For example, on i386, i8, i16, and i32
   // representative would be GR32; while on x86_64 it's GR64.
   for (unsigned i = 0; i != MVT::VALUETYPE_SIZE; ++i) {
-    const TargetRegisterClass* RRC;
-    uint8_t Cost;
-    std::tie(RRC, Cost) = findRepresentativeClass(TRI, (MVT::SimpleValueType)i);
+    
+    
+    auto [RRC, Cost] = findRepresentativeClass(TRI, (MVT::SimpleValueType)i);
     RepRegClassForVT[i] = RRC;
     RepRegClassCostForVT[i] = Cost;
   }

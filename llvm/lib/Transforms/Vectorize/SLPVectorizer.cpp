@@ -14313,9 +14313,9 @@ BoUpSLP::getEntryCost(const TreeEntry *E, ArrayRef<Value *> VectorizedVals,
             E->State == TreeEntry::CompressVectorize) &&
            "Entry state expected to be Vectorize, StridedVectorize or "
            "MaskedLoadCompressVectorize here.");
-    InstructionCost ScalarCost = 0;
-    InstructionCost VecCost = 0;
-    std::tie(ScalarCost, VecCost) = getGEPCosts(
+    
+    
+    auto [ScalarCost, VecCost] = getGEPCosts(
         *TTI, Ptrs, BasePtr, E->getOpcode(), CostKind, OrigScalarTy, VecTy);
     LLVM_DEBUG(dumpTreeCosts(E, 0, VecCost, ScalarCost,
                              "Calculated GEPs cost for Tree"));
@@ -23811,8 +23811,8 @@ public:
       // Add reduction values. The values are sorted for better vectorization
       // results.
       for (Value *V : PossibleRedVals) {
-        size_t Key, Idx;
-        std::tie(Key, Idx) = generateKeySubkey(V, &TLI, GenerateLoadsSubkey,
+        
+        auto [Key, Idx] = generateKeySubkey(V, &TLI, GenerateLoadsSubkey,
                                                /*AllowAlternate=*/false);
         ++PossibleReducedVals[Key][Idx].try_emplace(V, 0).first->second;
       }
@@ -25395,9 +25395,9 @@ bool SLPVectorizerPass::vectorizeHorReduction(
   };
 
   while (!Stack.empty()) {
-    Instruction *Inst;
-    unsigned Level;
-    std::tie(Inst, Level) = Stack.front();
+    
+    
+    auto [Inst, Level] = Stack.front();
     Stack.pop();
     // Do not try to analyze instruction that has already been vectorized.
     // This may happen when we vectorize instruction operands on a previous

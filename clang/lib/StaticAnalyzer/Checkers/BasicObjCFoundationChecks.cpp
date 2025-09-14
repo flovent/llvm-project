@@ -560,8 +560,8 @@ void CFRetainReleaseChecker::checkPreCall(const CallEvent &Call,
 
   // Is it null?
   ProgramStateRef state = C.getState();
-  ProgramStateRef stateNonNull, stateNull;
-  std::tie(stateNonNull, stateNull) = state->assume(*DefArgVal);
+  
+  auto [stateNonNull, stateNull] = state->assume(*DefArgVal);
 
   if (!stateNonNull) {
     ExplodedNode *N = C.generateErrorNode(stateNull);
@@ -856,8 +856,8 @@ static ProgramStateRef checkCollectionNonNil(CheckerContext &C,
   if (!KnownCollection)
     return State;
 
-  ProgramStateRef StNonNil, StNil;
-  std::tie(StNonNil, StNil) = State->assume(*KnownCollection);
+  
+  auto [StNonNil, StNil] = State->assume(*KnownCollection);
   if (StNil && !StNonNil) {
     // The collection is nil. This path is infeasible.
     return nullptr;

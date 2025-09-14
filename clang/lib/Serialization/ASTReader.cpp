@@ -715,9 +715,9 @@ collectMacroDefinitions(const PreprocessorOptions &PPOpts,
     StringRef Macro = PPOpts.Macros[I].first;
     bool IsUndef = PPOpts.Macros[I].second;
 
-    std::pair<StringRef, StringRef> MacroPair = Macro.split('=');
-    StringRef MacroName = MacroPair.first;
-    StringRef MacroBody = MacroPair.second;
+    auto [MacroName, MacroBody] = Macro.split('=');
+    
+    
 
     // For an #undef'd macro, we only care about the name.
     if (IsUndef) {
@@ -10494,8 +10494,8 @@ void ASTReader::finishPendingActions() {
           /*ErrorOnTagTypeMismatch =*/true);
       if (Ctx.IsEquivalent(ExtensionsPair.first, ExtensionsPair.second)) {
         // Merge redeclared ivars with their predecessors.
-        for (auto IvarPair : DuplicateIvars) {
-          ObjCIvarDecl *Ivar = IvarPair.first, *PrevIvar = IvarPair.second;
+        for (auto [Ivar, PrevIvar] : DuplicateIvars) {
+          
           // Change semantic DeclContext but keep the lexical one.
           Ivar->setDeclContextsImpl(PrevIvar->getDeclContext(),
                                     Ivar->getLexicalDeclContext(),

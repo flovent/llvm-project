@@ -499,8 +499,8 @@ bool SmartPtrModeling::handleComparisionOp(const CallEvent &Call,
                                Call.getResultType());
 
   if (OOK != OO_Spaceship) {
-    ProgramStateRef TrueState, FalseState;
-    std::tie(TrueState, FalseState) =
+    
+    auto [TrueState, FalseState] =
         State->assume(*RetVal.getAs<DefinedOrUnknownSVal>());
     if (TrueState)
       C.addTransition(
@@ -874,8 +874,8 @@ void SmartPtrModeling::handleBoolConversion(const CallEvent &Call,
                         C.getSValBuilder().makeZeroVal(Call.getResultType())));
     return;
   } else {
-    ProgramStateRef NotNullState, NullState;
-    std::tie(NotNullState, NullState) =
+    
+    auto [NotNullState, NullState] =
         State->assume(InnerPointerVal.castAs<DefinedOrUnknownSVal>());
 
     auto NullVal = C.getSValBuilder().makeNullWithType(ThisType);

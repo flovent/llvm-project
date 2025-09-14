@@ -858,9 +858,9 @@ join(llvm::ImmutableMap<K, V> A, llvm::ImmutableMap<K, V> B,
 
   // For each element in B, join it with the corresponding element in A
   // (or with an empty value if it doesn't exist in A).
-  for (const auto &Entry : B) {
-    const K &Key = Entry.first;
-    const V &ValB = Entry.second;
+  for (const auto& [Key, ValB] : B) {
+    
+    
     if (const V *ValA = A.lookup(Key))
       A = F.add(A, Key, JoinValues(*ValA, ValB));
     else

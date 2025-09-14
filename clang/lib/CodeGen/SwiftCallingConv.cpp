@@ -249,9 +249,9 @@ void SwiftAggLowering::addLegalTypedData(llvm::Type *type,
 
     // Try splitting vector types.
     if (auto vecTy = dyn_cast<llvm::VectorType>(type)) {
-      auto split = splitLegalVectorType(CGM, end - begin, vecTy);
-      auto eltTy = split.first;
-      auto numElts = split.second;
+      auto [eltTy, numElts] = splitLegalVectorType(CGM, end - begin, vecTy);
+      
+      
 
       auto eltSize = (end - begin) / numElts;
       assert(eltSize == getTypeStoreSize(CGM, eltTy));

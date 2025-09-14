@@ -202,14 +202,14 @@ Profile mergeProfilesByThread(const Profile &L, const Profile &R) {
       ThreadProfileIndexMap::iterator It;
       std::tie(It, std::ignore) = ThreadProfileIndex.insert(
           {Block.Thread, std::make_unique<PathDataMap>()});
-      for (const auto &PathAndData : Block.PathData) {
-        auto &PathID = PathAndData.first;
-        auto &Data = PathAndData.second;
+      for (const auto& [PathID, Data] : Block.PathData) {
+        
+        
         auto NewPathID =
             Merged.internPath(cantFail(P.get().expandPath(PathID)));
-        PathDataMap::iterator PathDataIt;
-        bool Inserted;
-        std::tie(PathDataIt, Inserted) = It->second->insert({NewPathID, Data});
+        
+        
+        auto [PathDataIt, Inserted] = It->second->insert({NewPathID, Data});
         if (!Inserted) {
           auto &ExistingData = PathDataIt->second;
           ExistingData.CallCount += Data.CallCount;
@@ -235,14 +235,14 @@ Profile mergeProfilesByStack(const Profile &L, const Profile &R) {
   using PathDataVector = decltype(Profile::Block::PathData);
   for (const auto &P : {std::ref(L), std::ref(R)})
     for (const auto &Block : P.get())
-      for (const auto &PathAndData : Block.PathData) {
-        auto &PathId = PathAndData.first;
-        auto &Data = PathAndData.second;
+      for (const auto& [PathId, Data] : Block.PathData) {
+        
+        
         auto NewPathID =
             Merged.internPath(cantFail(P.get().expandPath(PathId)));
-        PathDataMap::iterator PathDataIt;
-        bool Inserted;
-        std::tie(PathDataIt, Inserted) = PathData.insert({NewPathID, Data});
+        
+        
+        auto [PathDataIt, Inserted] = PathData.insert({NewPathID, Data});
         if (!Inserted) {
           auto &ExistingData = PathDataIt->second;
           ExistingData.CallCount += Data.CallCount;
@@ -384,9 +384,9 @@ Expected<Profile> profileFromTrace(const Trace &T) {
 
   // Once we've gone through the Trace, we now create one Block per thread in
   // the Profile.
-  for (const auto &ThreadPaths : ThreadPathData) {
-    const auto &TID = ThreadPaths.first;
-    const auto &PathsData = ThreadPaths.second;
+  for (const auto& [TID, PathsData] : ThreadPathData) {
+    
+    
     if (auto E = P.addBlock({
             TID,
             std::vector<std::pair<Profile::PathID, Profile::Data>>(

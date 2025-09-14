@@ -927,9 +927,9 @@ void X86FlagsCopyLoweringPass::rewriteMI(MachineBasicBlock &MBB,
     IsImplicitCC = true;
   }
   assert(CC != X86::COND_INVALID && "Unknown EFLAG user!");
-  Register CondReg;
-  bool Inverted;
-  std::tie(CondReg, Inverted) =
+  
+  
+  auto [CondReg, Inverted] =
       getCondOrInverseInReg(MBB, Pos, Loc, CC, CondRegs);
 
   // Insert a direct test of the saved register.

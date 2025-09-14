@@ -5854,9 +5854,9 @@ processImplicitMapsWithDefaultMappers(Sema &S, DSAStackTy *Stack,
       SmallVector<std::pair<FieldDecl *, unsigned>, 4> ParentChain(
           1, {nullptr, 1});
       while (!Types.empty()) {
-        QualType BaseType;
-        FieldDecl *CurFD;
-        std::tie(BaseType, CurFD) = Types.pop_back_val();
+        
+        
+        auto [BaseType, CurFD] = Types.pop_back_val();
         while (ParentChain.back().second == 0)
           ParentChain.pop_back();
         --ParentChain.back().second;

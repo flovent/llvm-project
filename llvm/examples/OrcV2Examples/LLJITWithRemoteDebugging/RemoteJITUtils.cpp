@@ -187,8 +187,8 @@ connectTCPSocket(StringRef NetworkAddress) {
         inconvertibleErrorCode());
   };
 
-  StringRef Host, PortStr;
-  std::tie(Host, PortStr) = NetworkAddress.split(':');
+  
+  auto [Host, PortStr] = NetworkAddress.split(':');
   if (Host.empty())
     return CreateErr("host name cannot be empty");
   if (PortStr.empty())

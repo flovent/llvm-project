@@ -9847,9 +9847,9 @@ getRegistersForValue(SelectionDAG &DAG, const SDLoc &DL,
 
   // If this is a constraint for a single physreg, or a constraint for a
   // register class, find it.
-  unsigned AssignedReg;
-  const TargetRegisterClass *RC;
-  std::tie(AssignedReg, RC) = TLI.getRegForInlineAsmConstraint(
+  
+  
+  auto [AssignedReg, RC] = TLI.getRegForInlineAsmConstraint(
       &TRI, RefOpInfo.ConstraintCode, RefOpInfo.ConstraintVT);
   // RC is unset only on failure. Return immediately.
   if (!RC)

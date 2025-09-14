@@ -1764,8 +1764,8 @@ llvm::FunctionType *CodeGenTypes::GetFunctionType(const CGFunctionInfo &FI) {
       ArgTypes[IRFunctionArgs.getPaddingArgNo(ArgNo)] =
           ArgInfo.getPaddingType();
 
-    unsigned FirstIRArg, NumIRArgs;
-    std::tie(FirstIRArg, NumIRArgs) = IRFunctionArgs.getIRArgs(ArgNo);
+    
+    auto [FirstIRArg, NumIRArgs] = IRFunctionArgs.getIRArgs(ArgNo);
 
     switch (ArgInfo.getKind()) {
     case ABIArgInfo::Ignore:
@@ -2098,8 +2098,8 @@ static void getTrivialDefaultFunctionAttributes(
     FuncAttrs.addAttribute("save-reg-params");
 
   for (StringRef Attr : CodeGenOpts.DefaultFunctionAttrs) {
-    StringRef Var, Value;
-    std::tie(Var, Value) = Attr.split('=');
+    
+    auto [Var, Value] = Attr.split('=');
     FuncAttrs.addAttribute(Var, Value);
   }
 
@@ -3002,8 +3002,8 @@ void CodeGenModule::ConstructAttributeList(StringRef Name,
       Attrs.addCapturesAttr(llvm::CaptureInfo::none());
 
     if (Attrs.hasAttributes()) {
-      unsigned FirstIRArg, NumIRArgs;
-      std::tie(FirstIRArg, NumIRArgs) = IRFunctionArgs.getIRArgs(ArgNo);
+      
+      auto [FirstIRArg, NumIRArgs] = IRFunctionArgs.getIRArgs(ArgNo);
       for (unsigned i = 0; i < NumIRArgs; i++)
         ArgAttrs[FirstIRArg + i] = ArgAttrs[FirstIRArg + i].addAttributes(
             getLLVMContext(), llvm::AttributeSet::get(getLLVMContext(), Attrs));
@@ -3145,8 +3145,8 @@ void CodeGenFunction::EmitFunctionProlog(const CGFunctionInfo &FI,
     assert(hasScalarEvaluationKind(Ty) ==
            hasScalarEvaluationKind(Arg->getType()));
 
-    unsigned FirstIRArg, NumIRArgs;
-    std::tie(FirstIRArg, NumIRArgs) = IRFunctionArgs.getIRArgs(ArgNo);
+    
+    auto [FirstIRArg, NumIRArgs] = IRFunctionArgs.getIRArgs(ArgNo);
 
     switch (ArgI.getKind()) {
     case ABIArgInfo::InAlloca: {
@@ -5346,8 +5346,8 @@ RValue CodeGenFunction::EmitCall(const CGFunctionInfo &CallInfo,
       IRCallArgs[IRFunctionArgs.getPaddingArgNo(ArgNo)] =
           llvm::UndefValue::get(ArgInfo.getPaddingType());
 
-    unsigned FirstIRArg, NumIRArgs;
-    std::tie(FirstIRArg, NumIRArgs) = IRFunctionArgs.getIRArgs(ArgNo);
+    
+    auto [FirstIRArg, NumIRArgs] = IRFunctionArgs.getIRArgs(ArgNo);
 
     bool ArgHasMaybeUndefAttr =
         IsArgumentMaybeUndef(TargetDecl, CallInfo.getNumRequiredArgs(), ArgNo);

@@ -799,9 +799,9 @@ Error InstrProfWriter::writeText(raw_fd_ostream &OS) {
            std::tie(B.first, B.second.first);
   });
 
-  for (const auto &record : OrderedFuncData) {
-    const StringRef &Name = record.first;
-    const FuncPair &Func = record.second;
+  for (const auto& [Name, Func] : OrderedFuncData) {
+    
+    
     writeRecordInText(Name, Func.first, Func.second, Symtab, OS);
   }
 

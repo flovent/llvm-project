@@ -1144,9 +1144,9 @@ void LVScopeArray::resolveExtra() {
       ArrayInfo << "[" << Type->getCount() << "]";
     else {
       // Get lower and upper subrange values.
-      unsigned LowerBound;
-      unsigned UpperBound;
-      std::tie(LowerBound, UpperBound) = Type->getBounds();
+      
+      
+      auto [LowerBound, UpperBound] = Type->getBounds();
 
       // The representation depends on the bound values. If the lower value
       // is zero, treat the pair as the elements count. Otherwise, just use

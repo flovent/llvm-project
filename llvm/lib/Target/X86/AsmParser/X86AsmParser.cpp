@@ -2421,8 +2421,8 @@ bool X86AsmParser::ParseIntelDotOperator(IntelExprStateMachine &SM,
   } else if ((isParsingMSInlineAsm() || getParser().isParsingMasm()) &&
              Tok.is(AsmToken::Identifier)) {
     TrailingDot = DotDispStr.consume_back(".");
-    const std::pair<StringRef, StringRef> BaseMember = DotDispStr.split('.');
-    const StringRef Base = BaseMember.first, Member = BaseMember.second;
+    const auto [Base, Member] = DotDispStr.split('.');
+    
     if (getParser().lookUpField(SM.getType(), DotDispStr, Info) &&
         getParser().lookUpField(SM.getSymName(), DotDispStr, Info) &&
         getParser().lookUpField(DotDispStr, Info) &&

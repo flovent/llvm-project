@@ -468,12 +468,12 @@ constantMatches(Value *V, unsigned GVN,
     return std::nullopt;
 
   // Holds a mapping from a global value number to a Constant.
-  DenseMap<unsigned, Constant *>::iterator GVNToConstantIt;
-  bool Inserted;
+  
+  
 
 
   // If we have a constant, try to make a new entry in the GVNToConstant.
-  std::tie(GVNToConstantIt, Inserted) =
+  auto [GVNToConstantIt, Inserted] =
       GVNToConstant.insert(std::make_pair(GVN, CST));
   // If it was found and is not equal, it is not the same. We do not
   // handle this case yet, and exit early.

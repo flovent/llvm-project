@@ -1158,8 +1158,8 @@ MachineBlockPlacement::getBestTrellisSuccessor(
   }
 
   // Pick the best combination of 2 edges from all the edges in the trellis.
-  WeightedEdge BestA, BestB;
-  std::tie(BestA, BestB) = getBestNonConflictingEdges(BB, Edges);
+  
+  auto [BestA, BestB] = getBestNonConflictingEdges(BB, Edges);
 
   if (BestA.Src != BB) {
     // If we have a trellis, and BB doesn't have the best fallthrough edges,
@@ -1739,9 +1739,9 @@ MachineBlockPlacement::selectBestSuccessor(const MachineBasicBlock *BB,
                       return std::get<0>(L) > std::get<0>(R);
                     });
   for (auto &Tup : DupCandidates) {
-    BranchProbability DupProb;
-    MachineBasicBlock *Succ;
-    std::tie(DupProb, Succ) = Tup;
+    
+    
+    auto [DupProb, Succ] = Tup;
     if (DupProb < BestProb)
       break;
     if (canTailDuplicateUnplacedPreds(BB, Succ, Chain, BlockFilter) &&

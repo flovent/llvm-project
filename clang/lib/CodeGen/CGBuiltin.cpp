@@ -1244,8 +1244,8 @@ llvm::Value *CodeGenFunction::emitCountedByPointerSize(
 
   //  count = ptr->count;
   //  index = ptr->index;
-  Value *Count, *Index;
-  std::tie(Count, Index) = GetCountFieldAndIndex(
+  
+  auto [Count, Index] = GetCountFieldAndIndex(
       *this, ME, ArrayBaseFD, CountFD, Idx, ResType, IsSigned);
   if (!Count)
     return nullptr;
@@ -1412,8 +1412,8 @@ llvm::Value *CodeGenFunction::emitCountedByMemberSize(
 
   //  count = ptr->count;
   //  index = ptr->index;
-  Value *Count, *Index;
-  std::tie(Count, Index) = GetCountFieldAndIndex(
+  
+  auto [Count, Index] = GetCountFieldAndIndex(
       *this, ME, FlexibleArrayMemberFD, CountFD, Idx, ResType, IsSigned);
   if (!Count)
     return nullptr;
@@ -3271,9 +3271,9 @@ RValue CodeGenFunction::EmitBuiltinExpr(const GlobalDecl GD, unsigned BuiltinID,
   case Builtin::BIconj:
   case Builtin::BIconjf:
   case Builtin::BIconjl: {
-    ComplexPairTy ComplexVal = EmitComplexExpr(E->getArg(0));
-    Value *Real = ComplexVal.first;
-    Value *Imag = ComplexVal.second;
+    auto [Real, Imag] = EmitComplexExpr(E->getArg(0));
+    
+    
     Imag = Builder.CreateFNeg(Imag, "neg");
     return RValue::getComplex(std::make_pair(Real, Imag));
   }
@@ -3611,9 +3611,9 @@ RValue CodeGenFunction::EmitBuiltinExpr(const GlobalDecl GD, unsigned BuiltinID,
                                                     ConvertType(ElementType));
         return RValue::getComplex(std::make_pair(Real, Imag));
       }
-      ComplexPairTy ComplexVal = EmitComplexExpr(E->getArg(0));
-      Value *Real = ComplexVal.first;
-      Value *Imag = ComplexVal.second;
+      auto [Real, Imag] = EmitComplexExpr(E->getArg(0));
+      
+      
       return RValue::getComplex(std::make_pair(Real, Imag));
     }
     Value *ArgValue = EmitScalarExpr(E->getArg(0));

@@ -218,8 +218,8 @@ void StackLifetime::calculateLiveIntervals() {
   for (auto IT : BlockLiveness) {
     const BasicBlock *BB = IT.getFirst();
     BlockLifetimeInfo &BlockInfo = IT.getSecond();
-    unsigned BBStart, BBEnd;
-    std::tie(BBStart, BBEnd) = BlockInstRange[BB];
+    
+    auto [BBStart, BBEnd] = BlockInstRange[BB];
 
     BitVector Started, Ended;
     Started.resize(NumAllocas);

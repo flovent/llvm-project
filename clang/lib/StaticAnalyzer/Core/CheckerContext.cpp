@@ -154,8 +154,8 @@ static bool evalComparison(SVal LHSVal, BinaryOperatorKind ComparisonOp,
                              Bldr.getConditionType());
   if (Eval.isUnknownOrUndef())
     return false;
-  ProgramStateRef StTrue, StFalse;
-  std::tie(StTrue, StFalse) = State->assume(Eval.castAs<DefinedSVal>());
+  
+  auto [StTrue, StFalse] = State->assume(Eval.castAs<DefinedSVal>());
   return StTrue && !StFalse;
 }
 

@@ -1132,8 +1132,8 @@ DwarfLinkerForBinary::AddressManager::getSubprogramRelocAdjustment(
   switch (Form) {
   case dwarf::DW_FORM_addr: {
     uint64_t Offset = DIE.getOffset() + getULEB128Size(Abbrev->getCode());
-    uint64_t LowPcOffset, LowPcEndOffset;
-    std::tie(LowPcOffset, LowPcEndOffset) =
+    
+    auto [LowPcOffset, LowPcEndOffset] =
         getAttributeOffsets(Abbrev, *LowPcIdx, Offset, *DIE.getDwarfUnit());
     return hasValidRelocationAt(ValidDebugInfoRelocs, LowPcOffset,
                                 LowPcEndOffset, Verbose);

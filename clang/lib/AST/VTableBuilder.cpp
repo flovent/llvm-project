@@ -3016,9 +3016,9 @@ static void GroupNewVirtualOverloads(
     const auto *ND = dyn_cast<NamedDecl>(D);
     if (!ND)
       continue;
-    VisitedGroupIndicesTy::iterator J;
-    bool Inserted;
-    std::tie(J, Inserted) = VisitedGroupIndices.insert(
+    
+    
+    auto [J, Inserted] = VisitedGroupIndices.insert(
         std::make_pair(ND->getDeclName(), Groups.size()));
     if (Inserted)
       Groups.push_back(MethodGroup());

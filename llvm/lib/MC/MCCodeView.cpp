@@ -263,9 +263,9 @@ void CodeViewContext::addLineEntry(const MCCVLoc &LineEntry) {
 std::vector<MCCVLoc>
 CodeViewContext::getFunctionLineEntries(unsigned FuncId) {
   std::vector<MCCVLoc> FilteredLines;
-  size_t LocBegin;
-  size_t LocEnd;
-  std::tie(LocBegin, LocEnd) = getLineExtentIncludingInlinees(FuncId);
+  
+  
+  auto [LocBegin, LocEnd] = getLineExtentIncludingInlinees(FuncId);
   if (LocBegin >= LocEnd) {
     return FilteredLines;
   }
@@ -309,9 +309,9 @@ std::pair<size_t, size_t> CodeViewContext::getLineExtent(unsigned FuncId) {
 
 std::pair<size_t, size_t>
 CodeViewContext::getLineExtentIncludingInlinees(unsigned FuncId) {
-  size_t LocBegin;
-  size_t LocEnd;
-  std::tie(LocBegin, LocEnd) = getLineExtent(FuncId);
+  
+  
+  auto [LocBegin, LocEnd] = getLineExtent(FuncId);
 
   // Include all child inline call sites in our extent.
   MCCVFunctionInfo *SiteInfo = getCVFunctionInfo(FuncId);
@@ -471,9 +471,9 @@ static unsigned computeLabelDiff(const MCAssembler &Asm, const MCSymbol *Begin,
 
 void CodeViewContext::encodeInlineLineTable(const MCAssembler &Asm,
                                             MCCVInlineLineTableFragment &Frag) {
-  size_t LocBegin;
-  size_t LocEnd;
-  std::tie(LocBegin, LocEnd) = getLineExtentIncludingInlinees(Frag.SiteFuncId);
+  
+  
+  auto [LocBegin, LocEnd] = getLineExtentIncludingInlinees(Frag.SiteFuncId);
 
   if (LocBegin >= LocEnd)
     return;

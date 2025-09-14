@@ -1297,8 +1297,8 @@ bool Decoder::dumpPackedEntry(const object::COFFObjectFile &COFF,
   {
     ListScope PS(SW, "Prologue");
 
-    uint16_t GPRMask, VFPMask;
-    std::tie(GPRMask, VFPMask) = SavedRegisterMask(RF, /*Prologue=*/true);
+    
+    auto [GPRMask, VFPMask] = SavedRegisterMask(RF, /*Prologue=*/true);
 
     if (StackAdjustment(RF) && !PrologueFolding(RF))
       SW.startLine() << "sub sp, sp, #" << StackAdjustment(RF) * 4 << "\n";
@@ -1327,8 +1327,8 @@ bool Decoder::dumpPackedEntry(const object::COFFObjectFile &COFF,
   if (RF.Ret() != ReturnType::RT_NoEpilogue) {
     ListScope PS(SW, "Epilogue");
 
-    uint16_t GPRMask, VFPMask;
-    std::tie(GPRMask, VFPMask) = SavedRegisterMask(RF, /*Prologue=*/false);
+    
+    auto [GPRMask, VFPMask] = SavedRegisterMask(RF, /*Prologue=*/false);
 
     if (StackAdjustment(RF) && !EpilogueFolding(RF))
       SW.startLine() << "add sp, sp, #" << StackAdjustment(RF) * 4 << "\n";

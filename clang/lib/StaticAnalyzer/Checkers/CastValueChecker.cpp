@@ -430,8 +430,8 @@ void CastValueChecker::evalGetAs(const CallEvent &Call, DefinedOrUnknownSVal DV,
 
 void CastValueChecker::evalIsa(const CallEvent &Call, DefinedOrUnknownSVal DV,
                                CheckerContext &C) const {
-  ProgramStateRef NonNullState, NullState;
-  std::tie(NonNullState, NullState) = C.getState()->assume(DV);
+  
+  auto [NonNullState, NullState] = C.getState()->assume(DV);
 
   if (NonNullState) {
     addInstanceOfTransition(Call, DV, NonNullState, C, /*IsInstanceOf=*/true);
@@ -446,8 +446,8 @@ void CastValueChecker::evalIsa(const CallEvent &Call, DefinedOrUnknownSVal DV,
 void CastValueChecker::evalIsaAndNonNull(const CallEvent &Call,
                                          DefinedOrUnknownSVal DV,
                                          CheckerContext &C) const {
-  ProgramStateRef NonNullState, NullState;
-  std::tie(NonNullState, NullState) = C.getState()->assume(DV);
+  
+  auto [NonNullState, NullState] = C.getState()->assume(DV);
 
   if (NonNullState) {
     addInstanceOfTransition(Call, DV, NonNullState, C, /*IsInstanceOf=*/true);

@@ -867,9 +867,9 @@ BinaryFunction::processIndirectBranch(MCInst &Instruction, unsigned Size,
   }
 
   auto getExprValue = [&](const MCExpr *Expr) {
-    const MCSymbol *TargetSym;
-    uint64_t TargetOffset;
-    std::tie(TargetSym, TargetOffset) = BC.MIB->getTargetSymbolInfo(Expr);
+    
+    
+    auto [TargetSym, TargetOffset] = BC.MIB->getTargetSymbolInfo(Expr);
     ErrorOr<uint64_t> SymValueOrError = BC.getSymbolValue(*TargetSym);
     assert(SymValueOrError && "Global symbol needs a value");
     return *SymValueOrError + TargetOffset;
@@ -1116,9 +1116,9 @@ Error BinaryFunction::handlePCRelOperand(MCInst &Instruction, uint64_t Address,
               << '\n';
   }
 
-  const MCSymbol *TargetSymbol;
-  uint64_t TargetOffset;
-  std::tie(TargetSymbol, TargetOffset) =
+  
+  
+  auto [TargetSymbol, TargetOffset] =
       BC.handleAddressRef(TargetAddress, *this, /*IsPCRel*/ true);
 
   bool ReplaceSuccess = MIB->replaceMemOperandDisp(
@@ -4197,9 +4197,9 @@ void BinaryFunction::disambiguateJumpTables(
         }
       }
 
-      uint64_t NewJumpTableID = 0;
-      const MCSymbol *NewJTLabel;
-      std::tie(NewJumpTableID, NewJTLabel) =
+      
+      
+      auto [NewJumpTableID, NewJTLabel] =
           BC.duplicateJumpTable(*this, JT, Target);
       {
         auto L = BC.scopeLock();

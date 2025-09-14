@@ -859,9 +859,9 @@ PartialInlinerImpl::computeBBInlineCost(BasicBlock *BB,
 std::tuple<InstructionCost, InstructionCost>
 PartialInlinerImpl::computeOutliningCosts(FunctionCloner &Cloner) const {
   InstructionCost OutliningFuncCallCost = 0, OutlinedFunctionCost = 0;
-  for (auto FuncBBPair : Cloner.OutlinedFunctions) {
-    Function *OutlinedFunc = FuncBBPair.first;
-    BasicBlock* OutliningCallBB = FuncBBPair.second;
+  for (auto [OutlinedFunc, OutliningCallBB] : Cloner.OutlinedFunctions) {
+    
+    
     // Now compute the cost of the call sequence to the outlined function
     // 'OutlinedFunction' in BB 'OutliningCallBB':
     auto *OutlinedFuncTTI = &GetTTI(*OutlinedFunc);

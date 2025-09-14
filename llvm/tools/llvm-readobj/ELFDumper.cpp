@@ -1853,9 +1853,9 @@ ELFDumper<ELFT>::findDynamic() {
 
 template <typename ELFT>
 void ELFDumper<ELFT>::loadDynamicTable() {
-  const Elf_Phdr *DynamicPhdr;
-  const Elf_Shdr *DynamicSec;
-  std::tie(DynamicPhdr, DynamicSec) = findDynamic();
+  
+  
+  auto [DynamicPhdr, DynamicSec] = findDynamic();
   if (!DynamicPhdr && !DynamicSec)
     return;
 
@@ -4028,9 +4028,9 @@ template <class ELFT> void GNUELFDumper<ELFT>::printRelr(const Elf_Shdr &Sec) {
   // st_value.
   SmallVector<std::pair<uint64_t, std::string>, 0> Syms;
   if (this->DotSymtabSec) {
-    Elf_Sym_Range Symtab;
-    std::optional<StringRef> Strtab;
-    std::tie(Symtab, Strtab) = this->getSymtabAndStrtab();
+    
+    
+    auto [Symtab, Strtab] = this->getSymtabAndStrtab();
     if (Symtab.size() && Strtab) {
       for (auto [I, Sym] : enumerate(Symtab)) {
         if (!Sym.st_shndx)

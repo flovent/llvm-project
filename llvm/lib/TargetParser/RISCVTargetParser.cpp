@@ -207,9 +207,9 @@ void printVType(unsigned VType, raw_ostream &OS) {
   if (AltFmt)
     OS << "alt";
 
-  unsigned LMul;
-  bool Fractional;
-  std::tie(LMul, Fractional) = decodeVLMUL(getVLMUL(VType));
+  
+  
+  auto [LMul, Fractional] = decodeVLMUL(getVLMUL(VType));
 
   if (Fractional)
     OS << ", mf";
@@ -229,9 +229,9 @@ void printVType(unsigned VType, raw_ostream &OS) {
 }
 
 unsigned getSEWLMULRatio(unsigned SEW, VLMUL VLMul) {
-  unsigned LMul;
-  bool Fractional;
-  std::tie(LMul, Fractional) = decodeVLMUL(VLMul);
+  
+  
+  auto [LMul, Fractional] = decodeVLMUL(VLMul);
 
   // Convert LMul to a fixed point value with 3 fractional bits.
   LMul = Fractional ? (8 / LMul) : (LMul * 8);

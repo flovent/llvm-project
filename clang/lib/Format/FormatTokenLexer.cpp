@@ -1112,10 +1112,10 @@ bool FormatTokenLexer::tryMergeConflictMarkers() {
   // into a single token with a special token type that the unwrapped line
   // parser will use to correctly rebuild the underlying code.
 
-  FileID ID;
+  
   // Get the position of the first token in the line.
-  unsigned FirstInLineOffset;
-  std::tie(ID, FirstInLineOffset) = SourceMgr.getDecomposedLoc(
+  
+  auto [ID, FirstInLineOffset] = SourceMgr.getDecomposedLoc(
       Tokens[FirstInLineIndex]->getStartOfNonWhitespace());
   StringRef Buffer = SourceMgr.getBufferOrFake(ID).getBuffer();
   // Calculate the offset of the start of the current line.

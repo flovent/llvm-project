@@ -3299,8 +3299,8 @@ void SMSchedule::orderDependence(const SwingSchedulerDAG *SSD, SUnit *SU,
         if (MI->getOperand(BasePos).getReg() == Reg)
           if (Register NewReg = SSD->getInstrBaseReg(SU))
             Reg = NewReg;
-      bool Reads, Writes;
-      std::tie(Reads, Writes) =
+      
+      auto [Reads, Writes] =
           (*I)->getInstr()->readsWritesVirtualRegister(Reg);
       if (MO.isDef() && Reads && stageScheduled(*I) <= StageInst1) {
         OrderBeforeUse = true;

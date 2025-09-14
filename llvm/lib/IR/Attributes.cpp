@@ -575,9 +575,9 @@ std::string Attribute::getAsString(bool InAttrGrp) const {
     return AttrWithBytesToString("dereferenceable_or_null");
 
   if (hasAttribute(Attribute::AllocSize)) {
-    unsigned ElemSize;
-    std::optional<unsigned> NumElems;
-    std::tie(ElemSize, NumElems) = getAllocSizeArgs();
+    
+    
+    auto [ElemSize, NumElems] = getAllocSizeArgs();
 
     return (NumElems
                 ? "allocsize(" + Twine(ElemSize) + "," + Twine(*NumElems) + ")"

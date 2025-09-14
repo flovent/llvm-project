@@ -7410,9 +7410,9 @@ Error ModuleSummaryIndexBitcodeReader::parseModule() {
         case bitc::MODULE_CODE_GLOBALVAR:
         case bitc::MODULE_CODE_FUNCTION:
         case bitc::MODULE_CODE_ALIAS: {
-          StringRef Name;
-          ArrayRef<uint64_t> GVRecord;
-          std::tie(Name, GVRecord) = readNameFromStrtab(Record);
+          
+          
+          auto [Name, GVRecord] = readNameFromStrtab(Record);
           if (GVRecord.size() <= 3)
             return error("Invalid record");
           uint64_t RawLinkage = GVRecord[3];

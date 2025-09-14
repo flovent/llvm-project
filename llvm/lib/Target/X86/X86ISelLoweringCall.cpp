@@ -107,9 +107,9 @@ MVT X86TargetLowering::getRegisterTypeForCallingConv(LLVMContext &Context,
     if (VT.getVectorElementType() == MVT::i1 && Subtarget.hasAVX512()) {
       unsigned NumElts = VT.getVectorNumElements();
 
-      MVT RegisterVT;
-      unsigned NumRegisters;
-      std::tie(RegisterVT, NumRegisters) =
+      
+      
+      auto [RegisterVT, NumRegisters] =
           handleMaskRegisterForCallingConv(NumElts, CC, Subtarget);
       if (RegisterVT != MVT::INVALID_SIMPLE_VALUE_TYPE)
         return RegisterVT;
@@ -143,9 +143,9 @@ unsigned X86TargetLowering::getNumRegistersForCallingConv(LLVMContext &Context,
     if (VT.getVectorElementType() == MVT::i1 && Subtarget.hasAVX512()) {
       unsigned NumElts = VT.getVectorNumElements();
 
-      MVT RegisterVT;
-      unsigned NumRegisters;
-      std::tie(RegisterVT, NumRegisters) =
+      
+      
+      auto [RegisterVT, NumRegisters] =
           handleMaskRegisterForCallingConv(NumElts, CC, Subtarget);
       if (RegisterVT != MVT::INVALID_SIMPLE_VALUE_TYPE)
         return NumRegisters;
@@ -732,8 +732,8 @@ static void Passv64i1ArgInRegs(
   Arg = DAG.getBitcast(MVT::i64, Arg);
 
   // Splitting the value into two i32 types
-  SDValue Lo, Hi;
-  std::tie(Lo, Hi) = DAG.SplitScalar(Arg, DL, MVT::i32, MVT::i32);
+  
+  auto [Lo, Hi] = DAG.SplitScalar(Arg, DL, MVT::i32, MVT::i32);
 
   // Attach the two i32 types into corresponding registers
   RegsToPass.push_back(std::make_pair(VA.getLocReg(), Lo));

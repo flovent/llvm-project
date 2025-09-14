@@ -131,9 +131,9 @@ DenseMap<BasicBlock *, ColorVector> llvm::colorEHFunclets(Function &F) {
   Worklist.push_back({EntryBlock, EntryBlock});
 
   while (!Worklist.empty()) {
-    BasicBlock *Visiting;
-    BasicBlock *Color;
-    std::tie(Visiting, Color) = Worklist.pop_back_val();
+    
+    
+    auto [Visiting, Color] = Worklist.pop_back_val();
     DEBUG_WITH_TYPE("win-eh-prepare-coloring",
                     dbgs() << "Visiting " << Visiting->getName() << ", "
                            << Color->getName() << "\n");

@@ -52,9 +52,9 @@ static bool readValueFromFile(const char *Filename,
     return false;
   static constexpr size_t BufSize = 256;
   char Line[BufSize] = {};
-  ssize_t BytesRead;
-  bool Success;
-  std::tie(BytesRead, Success) = retryingReadSome(Fd, Line, Line + BufSize);
+  
+  
+  auto [BytesRead, Success] = retryingReadSome(Fd, Line, Line + BufSize);
   close(Fd);
   if (!Success)
     return false;

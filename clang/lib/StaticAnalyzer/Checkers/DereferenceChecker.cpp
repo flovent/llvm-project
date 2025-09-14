@@ -125,9 +125,9 @@ static const Expr *getDereferenceExpr(const Stmt *S, bool IsBind=false){
     E = expr->IgnoreParenLValueCasts();
 
   if (IsBind) {
-    const VarDecl *VD;
-    const Expr *Init;
-    std::tie(VD, Init) = parseAssignment(S);
+    
+    
+    auto [VD, Init] = parseAssignment(S);
     if (VD && Init)
       E = Init;
   }
@@ -274,8 +274,8 @@ void DereferenceChecker::checkLocation(SVal l, bool isLoad, const Stmt* S,
 
   ProgramStateRef state = C.getState();
 
-  ProgramStateRef notNullState, nullState;
-  std::tie(notNullState, nullState) = state->assume(location);
+  
+  auto [notNullState, nullState] = state->assume(location);
 
   if (nullState) {
     if (!notNullState) {
@@ -331,8 +331,8 @@ void DereferenceChecker::checkBind(SVal L, SVal V, const Stmt *S,
 
   ProgramStateRef State = C.getState();
 
-  ProgramStateRef StNonNull, StNull;
-  std::tie(StNonNull, StNull) = State->assume(V.castAs<DefinedOrUnknownSVal>());
+  
+  auto [StNonNull, StNull] = State->assume(V.castAs<DefinedOrUnknownSVal>());
 
   if (StNull) {
     if (!StNonNull) {

@@ -573,9 +573,9 @@ void llvm::calculateDbgEntityHistory(const MachineFunction *MF,
 #if !defined(NDEBUG) || defined(LLVM_ENABLE_DUMP)
 LLVM_DUMP_METHOD void DbgValueHistoryMap::dump(StringRef FuncName) const {
   dbgs() << "DbgValueHistoryMap('" << FuncName << "'):\n";
-  for (const auto &VarRangePair : *this) {
-    const InlinedEntity &Var = VarRangePair.first;
-    const Entries &Entries = VarRangePair.second;
+  for (const auto& [Var, Entries] : *this) {
+    
+    
 
     const DILocalVariable *LocalVar = cast<DILocalVariable>(Var.first);
     const DILocation *Location = Var.second;

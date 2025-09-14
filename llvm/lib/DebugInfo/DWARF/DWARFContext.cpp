@@ -2265,9 +2265,9 @@ public:
 
       // Symbol to [address, section index] cache mapping.
       std::map<SymbolRef, SymInfo> AddrCache;
-      SupportsRelocation Supports;
-      RelocationResolver Resolver;
-      std::tie(Supports, Resolver) = getRelocationResolver(Obj);
+      
+      
+      auto [Supports, Resolver] = getRelocationResolver(Obj);
       for (const RelocationRef &Reloc : Section.relocations()) {
         // FIXME: it's not clear how to correctly handle scattered
         // relocations.

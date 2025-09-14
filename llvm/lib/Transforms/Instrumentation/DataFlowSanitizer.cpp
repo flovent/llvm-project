@@ -2280,8 +2280,8 @@ std::pair<Value *, Value *> DFSanFunction::loadShadowOriginSansLoadTracking(
   }
 
   // Other cases that support loading shadows or origins in a fast way.
-  Value *ShadowAddr, *OriginAddr;
-  std::tie(ShadowAddr, OriginAddr) =
+  
+  auto [ShadowAddr, OriginAddr] =
       DFS.getShadowOriginAddress(Addr, InstAlignment, Pos);
 
   const Align ShadowAlign = getShadowAlign(InstAlignment);
@@ -2327,8 +2327,8 @@ std::pair<Value *, Value *> DFSanFunction::loadShadowOriginSansLoadTracking(
 std::pair<Value *, Value *>
 DFSanFunction::loadShadowOrigin(Value *Addr, uint64_t Size, Align InstAlignment,
                                 BasicBlock::iterator Pos) {
-  Value *PrimitiveShadow, *Origin;
-  std::tie(PrimitiveShadow, Origin) =
+  
+  auto [PrimitiveShadow, Origin] =
       loadShadowOriginSansLoadTracking(Addr, Size, InstAlignment, Pos);
   if (DFS.shouldTrackOrigins()) {
     if (ClTrackOrigins == 2) {
@@ -2405,8 +2405,8 @@ void DFSanVisitor::visitLoadInst(LoadInst &LI) {
 
   std::vector<Value *> Shadows;
   std::vector<Value *> Origins;
-  Value *PrimitiveShadow, *Origin;
-  std::tie(PrimitiveShadow, Origin) =
+  
+  auto [PrimitiveShadow, Origin] =
       DFSF.loadShadowOrigin(LI.getPointerOperand(), Size, LI.getAlign(), Pos);
   const bool ShouldTrackOrigins = DFSF.DFS.shouldTrackOrigins();
   if (ShouldTrackOrigins) {
@@ -2589,8 +2589,8 @@ void DFSanFunction::storePrimitiveShadowOrigin(Value *Addr, uint64_t Size,
   }
 
   IRBuilder<> IRB(Pos->getParent(), Pos);
-  Value *ShadowAddr, *OriginAddr;
-  std::tie(ShadowAddr, OriginAddr) =
+  
+  auto [ShadowAddr, OriginAddr] =
       DFS.getShadowOriginAddress(Addr, InstAlignment, Pos);
 
   const unsigned ShadowVecSize = 8;

@@ -58,9 +58,9 @@ public:
 
     // If the expansion range is empty, use the identifier of the macro as a
     // range.
-    MacroExpansionContext::ExpansionRangeMap::iterator It;
-    bool Inserted;
-    std::tie(It, Inserted) =
+    
+    
+    auto [It, Inserted] =
         ExpansionRanges.try_emplace(MacroNameBegin, ExpansionEnd);
     if (Inserted) {
       LLVM_DEBUG(llvm::dbgs() << "maps ";
@@ -222,9 +222,9 @@ void MacroExpansionContext::onTokenLexed(const Token &Tok) {
 
   dumpTokenInto(*PP, OS, Tok);
 
-  ExpansionMap::iterator It;
-  bool Inserted;
-  std::tie(It, Inserted) =
+  
+  
+  auto [It, Inserted] =
       ExpandedTokens.try_emplace(CurrExpansionLoc, std::move(TokenAsString));
   if (!Inserted)
     It->getSecond().append(TokenAsString);

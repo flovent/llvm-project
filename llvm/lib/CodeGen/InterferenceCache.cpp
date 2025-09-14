@@ -129,8 +129,8 @@ bool InterferenceCache::Entry::valid(LiveIntervalUnion *LIUArray,
 }
 
 void InterferenceCache::Entry::update(unsigned MBBNum) {
-  SlotIndex Start, Stop;
-  std::tie(Start, Stop) = Indexes->getMBBRange(MBBNum);
+  
+  auto [Start, Stop] = Indexes->getMBBRange(MBBNum);
 
   // Use advanceTo only when possible.
   if (PrevPos != Start) {

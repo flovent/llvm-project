@@ -169,9 +169,9 @@ TEST(SparseMultiSetTest, Iterators) {
   Set.insert(1);
   Set.insert(0);
 
-  USet::RangePair RangePair = Set.equal_range(0);
-  USet::iterator B = RangePair.first;
-  USet::iterator E = RangePair.second;
+  auto [B, E] = Set.equal_range(0);
+  
+  
 
   // Move the iterators around, going to end and coming back.
   EXPECT_EQ(3, std::distance(B, E));

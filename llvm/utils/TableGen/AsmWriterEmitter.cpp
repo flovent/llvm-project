@@ -771,8 +771,8 @@ public:
         std::tie(Name, I) = parseName(++I, E);
         assert(isOpMapped(Name) && "Unmapped operand!");
 
-        int OpIndex, PrintIndex;
-        std::tie(OpIndex, PrintIndex) = getOpData(Name);
+        
+        auto [OpIndex, PrintIndex] = getOpData(Name);
         if (PrintIndex == -1) {
           // Can use the default printOperand route.
           OS << format("\\x%02X", (unsigned char)OpIndex + 1);

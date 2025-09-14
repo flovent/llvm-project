@@ -247,8 +247,8 @@ std::pair<size_t, size_t> COFFWriter::finalizeSymbolTable() {
 }
 
 Error COFFWriter::finalize(bool IsBigObj) {
-  size_t SymTabSize, SymbolSize;
-  std::tie(SymTabSize, SymbolSize) = IsBigObj
+  
+  auto [SymTabSize, SymbolSize] = IsBigObj
                                          ? finalizeSymbolTable<coff_symbol32>()
                                          : finalizeSymbolTable<coff_symbol16>();
 

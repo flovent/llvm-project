@@ -198,9 +198,9 @@ Error DWARFDebugFrame::parse(DWARFDataExtractor Data) {
   while (Data.isValidOffset(Offset)) {
     uint64_t StartOffset = Offset;
 
-    uint64_t Length;
-    DwarfFormat Format;
-    std::tie(Length, Format) = Data.getInitialLength(&Offset);
+    
+    
+    auto [Length, Format] = Data.getInitialLength(&Offset);
     bool IsDWARF64 = Format == DWARF64;
 
     // If the Length is 0, then this CIE is a terminator. We add it because some

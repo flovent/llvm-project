@@ -122,9 +122,9 @@ RawComment::RawComment(const SourceManager &SourceMgr, SourceRange SR,
 
   // Guess whether an ordinary comment is trailing.
   if (CommentOpts.ParseAllComments && isOrdinaryKind(K.first)) {
-    FileID BeginFileID;
-    unsigned BeginOffset;
-    std::tie(BeginFileID, BeginOffset) =
+    
+    
+    auto [BeginFileID, BeginOffset] =
         SourceMgr.getDecomposedLoc(Range.getBegin());
     if (BeginOffset != 0) {
       bool Invalid = false;

@@ -673,9 +673,9 @@ void FastISelMap::emitInstructionCode(raw_ostream &OS,
 
 void FastISelMap::printFunctionDefinitions(raw_ostream &OS) {
   // Now emit code for all the patterns that we collected.
-  for (const auto &SimplePattern : SimplePatterns) {
-    const OperandsSignature &Operands = SimplePattern.first;
-    const OpcodeTypeRetPredMap &OTM = SimplePattern.second;
+  for (const auto& [Operands, OTM] : SimplePatterns) {
+    
+    
 
     for (const auto &[Opcode, TM] : OTM) {
       OS << "// FastEmit functions for " << Opcode << ".\n";

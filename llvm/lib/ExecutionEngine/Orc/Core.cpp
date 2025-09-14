@@ -3710,10 +3710,10 @@ void ExecutionSession::OL_notifyFailed(MaterializationResponsibility &MR) {
     SymbolsToFail.push_back(Name);
   MR.SymbolFlags.clear();
 
-  JITDylib::AsynchronousSymbolQuerySet FailedQueries;
-  std::shared_ptr<SymbolDependenceMap> FailedSymbols;
+  
+  
 
-  std::tie(FailedQueries, FailedSymbols) = runSessionLocked([&]() {
+  auto [FailedQueries, FailedSymbols] = runSessionLocked([&]() {
     // If the tracker is defunct then there's nothing to do here.
     if (MR.RT->isDefunct())
       return std::pair<JITDylib::AsynchronousSymbolQuerySet,

@@ -463,10 +463,10 @@ class RewriteInstanceDiff {
     outs() << "=========================================================\n";
     setRegularColor();
     outs() << " * Functions with different contents do not appear here\n";
-    for (std::pair<EdgeTy, EdgeTy> &EI :
+    for (auto& [Edge2, Edge1] :
          llvm::make_second_range(llvm::reverse(EdgeMap))) {
-      EdgeTy &Edge2 = EI.first;
-      EdgeTy &Edge1 = EI.second;
+      
+      
       const double Score2 = std::get<2>(Edge2);
       const double Score1 = std::get<2>(Edge1);
       const BinaryFunction *Func = BBToFuncMap[std::get<0>(Edge2)];

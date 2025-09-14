@@ -4407,8 +4407,8 @@ static SDValue splitVectorOp(SDValue Op, SelectionDAG &DAG, const SDLoc &dl) {
     std::tie(LoOps[I], HiOps[I]) = splitVector(SrcOp, DAG, dl);
   }
 
-  EVT LoVT, HiVT;
-  std::tie(LoVT, HiVT) = DAG.GetSplitDestVTs(VT);
+  
+  auto [LoVT, HiVT] = DAG.GetSplitDestVTs(VT);
   return DAG.getNode(ISD::CONCAT_VECTORS, dl, VT,
                      DAG.getNode(Op.getOpcode(), dl, LoVT, LoOps),
                      DAG.getNode(Op.getOpcode(), dl, HiVT, HiOps));
@@ -15127,8 +15127,8 @@ static SDValue splitAndLowerShuffle(const SDLoc &DL, MVT VT, SDValue V1,
   // Use splitVector/extractSubVector so that split build-vectors just build two
   // narrower build vectors. This helps shuffling with splats and zeros.
   auto SplitVector = [&](SDValue V) {
-    SDValue LoV, HiV;
-    std::tie(LoV, HiV) = splitVector(peekThroughBitcasts(V), DAG, DL);
+    
+    auto [LoV, HiV] = splitVector(peekThroughBitcasts(V), DAG, DL);
     return std::make_pair(DAG.getBitcast(SplitVT, LoV),
                           DAG.getBitcast(SplitVT, HiV));
   };
@@ -21080,8 +21080,8 @@ static SDValue truncateVectorWithPACK(unsigned Opcode, EVT DstVT, SDValue In,
   }
 
   // Split lower/upper subvectors.
-  SDValue Lo, Hi;
-  std::tie(Lo, Hi) = splitVector(In, DAG, DL);
+  
+  auto [Lo, Hi] = splitVector(In, DAG, DL);
 
   // If Hi is undef, then don't bother packing it and widen the result instead.
   if (Hi.isUndef()) {
@@ -21440,11 +21440,11 @@ SDValue X86TargetLowering::LowerTRUNCATE(SDValue Op, SelectionDAG &DAG) const {
       // The default behavior is to truncate one step, concatenate, and then
       // truncate the remainder. We'd rather produce two 64-bit results and
       // concatenate those.
-      SDValue Lo, Hi;
-      std::tie(Lo, Hi) = DAG.SplitVector(In, DL);
+      
+      auto [Lo, Hi] = DAG.SplitVector(In, DL);
 
-      EVT LoVT, HiVT;
-      std::tie(LoVT, HiVT) = DAG.GetSplitDestVTs(VT);
+      
+      auto [LoVT, HiVT] = DAG.GetSplitDestVTs(VT);
 
       Lo = DAG.getNode(ISD::TRUNCATE, DL, LoVT, Lo);
       Hi = DAG.getNode(ISD::TRUNCATE, DL, HiVT, Hi);
@@ -23884,16 +23884,16 @@ static SDValue splitVSETCC(EVT VT, SDValue LHS, SDValue RHS, ISD::CondCode Cond,
   SDValue CC = DAG.getCondCode(Cond);
 
   // Extract the LHS Lo/Hi vectors
-  SDValue LHS1, LHS2;
-  std::tie(LHS1, LHS2) = splitVector(LHS, DAG, dl);
+  
+  auto [LHS1, LHS2] = splitVector(LHS, DAG, dl);
 
   // Extract the RHS Lo/Hi vectors
-  SDValue RHS1, RHS2;
-  std::tie(RHS1, RHS2) = splitVector(RHS, DAG, dl);
+  
+  auto [RHS1, RHS2] = splitVector(RHS, DAG, dl);
 
   // Issue the operation on the smaller types and concatenate the result back
-  EVT LoVT, HiVT;
-  std::tie(LoVT, HiVT) = DAG.GetSplitDestVTs(VT);
+  
+  auto [LoVT, HiVT] = DAG.GetSplitDestVTs(VT);
   return DAG.getNode(ISD::CONCAT_VECTORS, dl, VT,
                      DAG.getNode(ISD::SETCC, dl, LoVT, LHS1, RHS1, CC),
                      DAG.getNode(ISD::SETCC, dl, HiVT, LHS2, RHS2, CC));
@@ -24809,8 +24809,8 @@ static SDValue LowerXALUO(SDValue Op, SelectionDAG &DAG) {
   // has only one use.
   SDLoc DL(Op);
   X86::CondCode Cond;
-  SDValue Value, Overflow;
-  std::tie(Value, Overflow) = getX86XALUOOp(Cond, Op, DAG);
+  
+  auto [Value, Overflow] = getX86XALUOOp(Cond, Op, DAG);
 
   SDValue SetCC = getSETCC(Cond, Overflow, DL, DAG);
   assert(Op->getValueType(1) == MVT::i8 && "Unexpected VT!");
@@ -25495,8 +25495,8 @@ static SDValue splitVectorStore(StoreSDNode *Store, SelectionDAG &DAG) {
     return SDValue();
 
   SDLoc DL(Store);
-  SDValue Value0, Value1;
-  std::tie(Value0, Value1) = splitVector(StoredVal, DAG, DL);
+  
+  auto [Value0, Value1] = splitVector(StoredVal, DAG, DL);
   unsigned HalfOffset = Value0.getValueType().getStoreSize();
   SDValue Ptr0 = Store->getBasePtr();
   SDValue Ptr1 =
@@ -26216,8 +26216,8 @@ static SDValue getMaskNode(SDValue Mask, MVT MaskVT,
     assert(MaskVT == MVT::v64i1 && "Expected v64i1 mask!");
     assert(Subtarget.hasBWI() && "Expected AVX512BW target!");
     // In case 32bit mode, bitcast i64 is illegal, extend/split it.
-    SDValue Lo, Hi;
-    std::tie(Lo, Hi) = DAG.SplitScalar(Mask, dl, MVT::i32, MVT::i32);
+    
+    auto [Lo, Hi] = DAG.SplitScalar(Mask, dl, MVT::i32, MVT::i32);
     Lo = DAG.getBitcast(MVT::v32i1, Lo);
     Hi = DAG.getBitcast(MVT::v32i1, Hi);
     return DAG.getNode(ISD::CONCAT_VECTORS, dl, MVT::v64i1, Lo, Hi);
@@ -29921,15 +29921,15 @@ static SDValue LowerMULO(SDValue Op, const X86Subtarget &Subtarget,
   if ((VT == MVT::v32i8 && !Subtarget.hasInt256()) ||
       (VT == MVT::v64i8 && !Subtarget.hasBWI())) {
     // Extract the LHS Lo/Hi vectors
-    SDValue LHSLo, LHSHi;
-    std::tie(LHSLo, LHSHi) = splitVector(A, DAG, dl);
+    
+    auto [LHSLo, LHSHi] = splitVector(A, DAG, dl);
 
     // Extract the RHS Lo/Hi vectors
-    SDValue RHSLo, RHSHi;
-    std::tie(RHSLo, RHSHi) = splitVector(B, DAG, dl);
+    
+    auto [RHSLo, RHSHi] = splitVector(B, DAG, dl);
 
-    EVT LoOvfVT, HiOvfVT;
-    std::tie(LoOvfVT, HiOvfVT) = DAG.GetSplitDestVTs(OvfVT);
+    
+    auto [LoOvfVT, HiOvfVT] = DAG.GetSplitDestVTs(OvfVT);
     SDVTList LoVTs = DAG.getVTList(LHSLo.getValueType(), LoOvfVT);
     SDVTList HiVTs = DAG.getVTList(LHSHi.getValueType(), HiOvfVT);
 
@@ -32342,8 +32342,8 @@ static SDValue getPMOVMSKB(const SDLoc &DL, SDValue V, SelectionDAG &DAG,
   MVT InVT = V.getSimpleValueType();
 
   if (InVT == MVT::v64i8) {
-    SDValue Lo, Hi;
-    std::tie(Lo, Hi) = DAG.SplitVector(V, DL);
+    
+    auto [Lo, Hi] = DAG.SplitVector(V, DL);
     Lo = getPMOVMSKB(DL, Lo, DAG, Subtarget);
     Hi = getPMOVMSKB(DL, Hi, DAG, Subtarget);
     Lo = DAG.getNode(ISD::ZERO_EXTEND, DL, MVT::i64, Lo);
@@ -32353,8 +32353,8 @@ static SDValue getPMOVMSKB(const SDLoc &DL, SDValue V, SelectionDAG &DAG,
     return DAG.getNode(ISD::OR, DL, MVT::i64, Lo, Hi);
   }
   if (InVT == MVT::v32i8 && !Subtarget.hasInt256()) {
-    SDValue Lo, Hi;
-    std::tie(Lo, Hi) = DAG.SplitVector(V, DL);
+    
+    auto [Lo, Hi] = DAG.SplitVector(V, DL);
     Lo = DAG.getNode(X86ISD::MOVMSK, DL, MVT::i32, Lo);
     Hi = DAG.getNode(X86ISD::MOVMSK, DL, MVT::i32, Hi);
     Hi = DAG.getNode(ISD::SHL, DL, MVT::i32, Hi,
@@ -32377,8 +32377,8 @@ static SDValue LowerBITCAST(SDValue Op, const X86Subtarget &Subtarget,
     assert(!Subtarget.is64Bit() && "Expected 32-bit mode");
     assert(Subtarget.hasBWI() && "Expected BWI target");
     SDLoc dl(Op);
-    SDValue Lo, Hi;
-    std::tie(Lo, Hi) = DAG.SplitScalar(Src, dl, MVT::i32, MVT::i32);
+    
+    auto [Lo, Hi] = DAG.SplitScalar(Src, dl, MVT::i32, MVT::i32);
     Lo = DAG.getBitcast(MVT::v32i1, Lo);
     Hi = DAG.getBitcast(MVT::v32i1, Hi);
     return DAG.getNode(ISD::CONCAT_VECTORS, dl, MVT::v64i1, Lo, Hi);
@@ -33444,10 +33444,10 @@ SDValue X86TargetLowering::LowerGC_TRANSITION(SDValue Op,
 static SDValue LowerCVTPS2PH(SDValue Op, SelectionDAG &DAG) {
   SDLoc dl(Op);
   EVT VT = Op.getValueType();
-  SDValue Lo, Hi;
-  std::tie(Lo, Hi) = DAG.SplitVectorOperand(Op.getNode(), 0);
-  EVT LoVT, HiVT;
-  std::tie(LoVT, HiVT) = DAG.GetSplitDestVTs(VT);
+  
+  auto [Lo, Hi] = DAG.SplitVectorOperand(Op.getNode(), 0);
+  
+  auto [LoVT, HiVT] = DAG.GetSplitDestVTs(VT);
   SDValue RC = Op.getOperand(1);
   Lo = DAG.getNode(X86ISD::CVTPS2PH, dl, LoVT, Lo, RC);
   Hi = DAG.getNode(X86ISD::CVTPS2PH, dl, HiVT, Hi, RC);
@@ -33765,10 +33765,10 @@ void X86TargetLowering::ReplaceNodeResults(SDNode *N,
     llvm_unreachable("Do not know how to custom type legalize this operation!");
   case X86ISD::CVTPH2PS: {
     EVT VT = N->getValueType(0);
-    SDValue Lo, Hi;
-    std::tie(Lo, Hi) = DAG.SplitVectorOperand(N, 0);
-    EVT LoVT, HiVT;
-    std::tie(LoVT, HiVT) = DAG.GetSplitDestVTs(VT);
+    
+    auto [Lo, Hi] = DAG.SplitVectorOperand(N, 0);
+    
+    auto [LoVT, HiVT] = DAG.GetSplitDestVTs(VT);
     Lo = DAG.getNode(X86ISD::CVTPH2PS, dl, LoVT, Lo);
     Hi = DAG.getNode(X86ISD::CVTPH2PS, dl, HiVT, Hi);
     SDValue Res = DAG.getNode(ISD::CONCAT_VECTORS, dl, VT, Lo, Hi);
@@ -33777,10 +33777,10 @@ void X86TargetLowering::ReplaceNodeResults(SDNode *N,
   }
   case X86ISD::STRICT_CVTPH2PS: {
     EVT VT = N->getValueType(0);
-    SDValue Lo, Hi;
-    std::tie(Lo, Hi) = DAG.SplitVectorOperand(N, 1);
-    EVT LoVT, HiVT;
-    std::tie(LoVT, HiVT) = DAG.GetSplitDestVTs(VT);
+    
+    auto [Lo, Hi] = DAG.SplitVectorOperand(N, 1);
+    
+    auto [LoVT, HiVT] = DAG.GetSplitDestVTs(VT);
     Lo = DAG.getNode(X86ISD::STRICT_CVTPH2PS, dl, {LoVT, MVT::Other},
                      {N->getOperand(0), Lo});
     Hi = DAG.getNode(X86ISD::STRICT_CVTPH2PS, dl, {HiVT, MVT::Other},
@@ -34037,8 +34037,8 @@ void X86TargetLowering::ReplaceNodeResults(SDNode *N,
         isTypeLegal(MVT::v4i64)) {
       // Input needs to be split and output needs to widened. Let's use two
       // VTRUNCs, and shuffle their results together into the wider type.
-      SDValue Lo, Hi;
-      std::tie(Lo, Hi) = DAG.SplitVector(In, dl);
+      
+      auto [Lo, Hi] = DAG.SplitVector(In, dl);
 
       Lo = DAG.getNode(X86ISD::VTRUNC, dl, MVT::v16i8, Lo);
       Hi = DAG.getNode(X86ISD::VTRUNC, dl, MVT::v16i8, Hi);
@@ -34121,8 +34121,8 @@ void X86TargetLowering::ReplaceNodeResults(SDNode *N,
 
       // Perform custom splitting instead of the two stage extend we would get
       // by default.
-      EVT LoVT, HiVT;
-      std::tie(LoVT, HiVT) = DAG.GetSplitDestVTs(N->getValueType(0));
+      
+      auto [LoVT, HiVT] = DAG.GetSplitDestVTs(N->getValueType(0));
       assert(isTypeLegal(LoVT) && "Split VT not legal?");
 
       SDValue Lo = getEXTEND_VECTOR_INREG(Opc, dl, LoVT, In, DAG);
@@ -34653,16 +34653,16 @@ void X86TargetLowering::ReplaceNodeResults(SDNode *N,
     assert((!Regs64bit || Subtarget.canUseCMPXCHG16B()) &&
            "64-bit ATOMIC_CMP_SWAP_WITH_SUCCESS requires CMPXCHG16B");
     MVT HalfT = Regs64bit ? MVT::i64 : MVT::i32;
-    SDValue cpInL, cpInH;
-    std::tie(cpInL, cpInH) =
+    
+    auto [cpInL, cpInH] =
         DAG.SplitScalar(N->getOperand(2), dl, HalfT, HalfT);
     cpInL = DAG.getCopyToReg(N->getOperand(0), dl,
                              Regs64bit ? X86::RAX : X86::EAX, cpInL, SDValue());
     cpInH =
         DAG.getCopyToReg(cpInL.getValue(0), dl, Regs64bit ? X86::RDX : X86::EDX,
                          cpInH, cpInL.getValue(1));
-    SDValue swapInL, swapInH;
-    std::tie(swapInL, swapInH) =
+    
+    auto [swapInL, swapInH] =
         DAG.SplitScalar(N->getOperand(3), dl, HalfT, HalfT);
     swapInH =
         DAG.getCopyToReg(cpInH.getValue(0), dl, Regs64bit ? X86::RCX : X86::ECX,
@@ -34820,8 +34820,8 @@ void X86TargetLowering::ReplaceNodeResults(SDNode *N,
     // we can split using the k-register rather than memory.
     if (SrcVT == MVT::v64i1 && DstVT == MVT::i64 && Subtarget.hasBWI()) {
       assert(!Subtarget.is64Bit() && "Expected 32-bit mode");
-      SDValue Lo, Hi;
-      std::tie(Lo, Hi) = DAG.SplitVectorOperand(N, 0);
+      
+      auto [Lo, Hi] = DAG.SplitVectorOperand(N, 0);
       Lo = DAG.getBitcast(MVT::i32, Lo);
       Hi = DAG.getBitcast(MVT::i32, Hi);
       SDValue Res = DAG.getNode(ISD::BUILD_PAIR, dl, MVT::i64, Lo, Hi);
@@ -46211,8 +46211,8 @@ static SDValue combineMinMaxReduction(SDNode *Extract, SelectionDAG &DAG,
 
   // First, reduce the source down to 128-bit, applying BinOp to lo/hi.
   while (SrcVT.getSizeInBits() > 128) {
-    SDValue Lo, Hi;
-    std::tie(Lo, Hi) = splitVector(MinPos, DAG, DL);
+    
+    auto [Lo, Hi] = splitVector(MinPos, DAG, DL);
     SrcVT = Lo.getValueType();
     MinPos = DAG.getNode(BinOp, DL, SrcVT, Lo, Hi);
   }
@@ -46318,8 +46318,8 @@ static SDValue combinePredicateReduction(SDNode *Extract, SelectionDAG &DAG,
     } else {
       // Use combineBitcastvxi1 to create the MOVMSK.
       while (NumElts > MaxElts) {
-        SDValue Lo, Hi;
-        std::tie(Lo, Hi) = DAG.SplitVector(Match, DL);
+        
+        auto [Lo, Hi] = DAG.SplitVector(Match, DL);
         Match = DAG.getNode(BinOp, DL, Lo.getValueType(), Lo, Hi);
         NumElts /= 2;
       }
@@ -46348,8 +46348,8 @@ static SDValue combinePredicateReduction(SDNode *Extract, SelectionDAG &DAG,
       return SDValue();
 
     if (MatchSizeInBits == 256 && BitWidth < 32 && !Subtarget.hasInt256()) {
-      SDValue Lo, Hi;
-      std::tie(Lo, Hi) = DAG.SplitVector(Match, DL);
+      
+      auto [Lo, Hi] = DAG.SplitVector(Match, DL);
       Match = DAG.getNode(BinOp, DL, Lo.getValueType(), Lo, Hi);
       MatchSizeInBits = Match.getValueSizeInBits();
     }
@@ -47000,8 +47000,8 @@ static SDValue combineArithReduction(SDNode *ExtElt, SelectionDAG &DAG,
   // vXi8 add reduction - sum lo/hi halves then use PSADBW.
   if (VT == MVT::i8) {
     while (Rdx.getValueSizeInBits() > 128) {
-      SDValue Lo, Hi;
-      std::tie(Lo, Hi) = splitVector(Rdx, DAG, DL);
+      
+      auto [Lo, Hi] = splitVector(Rdx, DAG, DL);
       VecVT = Lo.getValueType();
       Rdx = DAG.getNode(ISD::ADD, DL, VecVT, Lo, Hi);
     }
@@ -47047,8 +47047,8 @@ static SDValue combineArithReduction(SDNode *ExtElt, SelectionDAG &DAG,
 
     // TODO: We could truncate to vXi16/vXi32 before performing the reduction.
     while (Rdx.getValueSizeInBits() > 128) {
-      SDValue Lo, Hi;
-      std::tie(Lo, Hi) = splitVector(Rdx, DAG, DL);
+      
+      auto [Lo, Hi] = splitVector(Rdx, DAG, DL);
       VecVT = Lo.getValueType();
       Rdx = DAG.getNode(ISD::ADD, DL, VecVT, Lo, Hi);
     }
@@ -50917,10 +50917,10 @@ static SDValue combineAndShuffleNot(SDNode *N, SelectionDAG &DAG,
   // AVX2.
   if (!Subtarget.useAVX512Regs() && VT.is512BitVector() &&
       TLI.isTypeLegal(VT.getHalfNumVectorElementsVT(*DAG.getContext()))) {
-    SDValue LoX, HiX;
-    std::tie(LoX, HiX) = splitVector(X, DAG, DL);
-    SDValue LoY, HiY;
-    std::tie(LoY, HiY) = splitVector(Y, DAG, DL);
+    
+    auto [LoX, HiX] = splitVector(X, DAG, DL);
+    
+    auto [LoY, HiY] = splitVector(Y, DAG, DL);
     EVT SplitVT = LoX.getValueType();
     SDValue LoV = DAG.getNode(X86ISD::ANDNP, DL, SplitVT, {LoX, LoY});
     SDValue HiV = DAG.getNode(X86ISD::ANDNP, DL, SplitVT, {HiX, HiY});

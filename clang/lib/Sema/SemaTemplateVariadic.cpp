@@ -964,8 +964,8 @@ bool Sema::CheckParameterPacksForExpansion(
     if (!IsVarDeclPack && CurrentInstantiationScope) {
       if (NamedDecl *PartialPack =
               CurrentInstantiationScope->getPartiallySubstitutedPack()) {
-        unsigned PartialDepth, PartialIndex;
-        std::tie(PartialDepth, PartialIndex) = getDepthAndIndex(PartialPack);
+        
+        auto [PartialDepth, PartialIndex] = getDepthAndIndex(PartialPack);
         if (PartialDepth == Depth && PartialIndex == Index) {
           RetainExpansion = true;
           // We don't actually know the new pack size yet.

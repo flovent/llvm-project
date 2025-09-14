@@ -1300,9 +1300,9 @@ ASTFileSignature ASTWriter::backpatchSignature() {
     return {};
 
   // For implicit modules, write the hash of the PCM as its signature.
-  ASTFileSignature ASTBlockHash;
-  ASTFileSignature Signature;
-  std::tie(ASTBlockHash, Signature) = createSignature();
+  
+  
+  auto [ASTBlockHash, Signature] = createSignature();
 
   BackpatchSignatureAt(Stream, ASTBlockHash, ASTBlockHashOffset);
   BackpatchSignatureAt(Stream, Signature, SignatureOffset);
@@ -4021,9 +4021,9 @@ void ASTWriter::WriteIdentifierTable(Preprocessor &PP,
     // Create the on-disk hash table representation. We only store offsets
     // for identifiers that appear here for the first time.
     IdentifierOffsets.resize(NextIdentID - FirstIdentID);
-    for (auto IdentIDPair : IdentifierIDs) {
-      const IdentifierInfo *II = IdentIDPair.first;
-      IdentifierID ID = IdentIDPair.second;
+    for (auto [II, ID] : IdentifierIDs) {
+      
+      
       assert(II && "NULL identifier in identifier table");
 
       // Write out identifiers if either the ID is local or the identifier has
@@ -4808,9 +4808,9 @@ void ASTWriter::GenerateNameLookupTable(
         ModuleLocalLookupGenerator;
     ModuleLevelNameLookupTrait ModuleLocalTrait(*this);
 
-    for (const auto &ModuleLocalIter : ModuleLocalDecls) {
-      const auto &Key = ModuleLocalIter.first;
-      const auto &IDs = ModuleLocalIter.second;
+    for (const auto& [Key, IDs] : ModuleLocalDecls) {
+      
+      
       ModuleLocalLookupGenerator.insert(Key, ModuleLocalTrait.getData(IDs),
                                         ModuleLocalTrait);
     }
@@ -4829,9 +4829,9 @@ void ASTWriter::GenerateNameLookupTable(
         TULookupGenerator;
     ASTDeclContextNameTrivialLookupTrait TULocalTrait(*this);
 
-    for (const auto &TULocalIter : TULocalDecls) {
-      const auto &Key = TULocalIter.first;
-      const auto &IDs = TULocalIter.second;
+    for (const auto& [Key, IDs] : TULocalDecls) {
+      
+      
       TULookupGenerator.insert(Key, TULocalTrait.getData(IDs), TULocalTrait);
     }
 

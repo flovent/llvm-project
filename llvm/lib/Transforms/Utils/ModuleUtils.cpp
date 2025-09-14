@@ -308,9 +308,9 @@ llvm::getOrCreateSanitizerCtorAndInitFunctions(
       return {Ctor,
               declareSanitizerInitFunction(M, InitName, InitArgTypes, Weak)};
 
-  Function *Ctor;
-  FunctionCallee InitFunction;
-  std::tie(Ctor, InitFunction) = llvm::createSanitizerCtorAndInitFunctions(
+  
+  
+  auto [Ctor, InitFunction] = llvm::createSanitizerCtorAndInitFunctions(
       M, CtorName, InitName, InitArgTypes, InitArgs, VersionCheckName, Weak);
   FunctionsCreatedCallback(Ctor, InitFunction);
   return std::make_pair(Ctor, InitFunction);

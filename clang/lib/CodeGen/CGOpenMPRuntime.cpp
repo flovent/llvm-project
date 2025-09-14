@@ -3872,9 +3872,9 @@ CGOpenMPRuntime::emitTaskInit(CodeGenFunction &CGF, SourceLocation Loc,
         continue;
       }
       for (const Expr *E : C->varlist()) {
-        llvm::Value *Addr;
-        llvm::Value *Size;
-        std::tie(Addr, Size) = getPointerAndSize(CGF, E);
+        
+        
+        auto [Addr, Size] = getPointerAndSize(CGF, E);
         LValue Base =
             CGF.MakeAddrLValue(CGF.Builder.CreateConstGEP(AffinitiesArray, Pos),
                                KmpTaskAffinityInfoTy);
@@ -3905,9 +3905,9 @@ CGOpenMPRuntime::emitTaskInit(CodeGenFunction &CGF, SourceLocation Loc,
       OMPIteratorGeneratorScope IteratorScope(
           CGF, cast_or_null<OMPIteratorExpr>(Modifier->IgnoreParenImpCasts()));
       for (const Expr *E : C->varlist()) {
-        llvm::Value *Addr;
-        llvm::Value *Size;
-        std::tie(Addr, Size) = getPointerAndSize(CGF, E);
+        
+        
+        auto [Addr, Size] = getPointerAndSize(CGF, E);
         llvm::Value *Idx = CGF.EmitLoadOfScalar(PosLVal, E->getExprLoc());
         LValue Base =
             CGF.MakeAddrLValue(CGF.Builder.CreateGEP(CGF, AffinitiesArray, Idx),
@@ -4470,9 +4470,9 @@ void CGOpenMPRuntime::emitUpdateClause(CodeGenFunction &CGF, LValue DepobjLVal,
   getDependTypes(C, KmpDependInfoTy, FlagsTy);
   auto *KmpDependInfoRD = KmpDependInfoTy->castAsRecordDecl();
   llvm::Type *LLVMFlagsTy = CGF.ConvertTypeForMem(FlagsTy);
-  llvm::Value *NumDeps;
-  LValue Base;
-  std::tie(NumDeps, Base) = getDepobjElements(CGF, DepobjLVal, Loc);
+  
+  
+  auto [NumDeps, Base] = getDepobjElements(CGF, DepobjLVal, Loc);
 
   Address Begin = Base.getAddress();
   // Cast from pointer to array type to pointer to single element.
@@ -5775,9 +5775,9 @@ llvm::Value *CGOpenMPRuntime::emitTaskReductionInit(
     llvm::Value *Orig = RCG.getOrigLValue(Cnt).getPointer(CGF);
     CGF.EmitStoreOfScalar(Orig, OrigLVal);
     RCG.emitAggregateType(CGF, Cnt);
-    llvm::Value *SizeValInChars;
-    llvm::Value *SizeVal;
-    std::tie(SizeValInChars, SizeVal) = RCG.getSizes(Cnt);
+    
+    
+    auto [SizeValInChars, SizeVal] = RCG.getSizes(Cnt);
     // We use delayed creation/initialization for VLAs and array sections. It is
     // required because runtime does not provide the way to pass the sizes of
     // VLAs/array sections to initializer/combiner/finalizer functions. Instead

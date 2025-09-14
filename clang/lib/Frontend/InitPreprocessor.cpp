@@ -40,9 +40,9 @@ static bool MacroBodyEndsInBackslash(StringRef MacroBody) {
 // "#define XXX Y z W".  To get a #define with no value, use "XXX=".
 static void DefineBuiltinMacro(MacroBuilder &Builder, StringRef Macro,
                                DiagnosticsEngine &Diags) {
-  std::pair<StringRef, StringRef> MacroPair = Macro.split('=');
-  StringRef MacroName = MacroPair.first;
-  StringRef MacroBody = MacroPair.second;
+  auto [MacroName, MacroBody] = Macro.split('=');
+  
+  
   if (MacroName.size() != Macro.size()) {
     // Per GCC -D semantics, the macro ends at \n if it exists.
     StringRef::size_type End = MacroBody.find_first_of("\n\r");

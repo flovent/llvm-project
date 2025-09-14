@@ -436,8 +436,8 @@ void CheckerRegistry::addChecker(RegisterCheckerFn Rfn,
   Data.Checkers.emplace_back(Rfn, Sfn, Name, Desc, DocsUri, IsHidden);
 
   // Record the presence of the checker in its packages.
-  StringRef PackageName, LeafName;
-  std::tie(PackageName, LeafName) = Name.rsplit(PackageSeparator);
+  
+  auto [PackageName, LeafName] = Name.rsplit(PackageSeparator);
   while (!LeafName.empty()) {
     Data.PackageSizes[PackageName] += 1;
     std::tie(PackageName, LeafName) = PackageName.rsplit(PackageSeparator);
@@ -487,9 +487,9 @@ static void isOptionContainedIn(const CmdLineOptionList &OptionList,
 void CheckerRegistry::validateCheckerOptions() const {
   for (const auto &Config : AnOpts.Config) {
 
-    StringRef SuppliedCheckerOrPackage;
-    StringRef SuppliedOption;
-    std::tie(SuppliedCheckerOrPackage, SuppliedOption) =
+    
+    
+    auto [SuppliedCheckerOrPackage, SuppliedOption] =
         Config.getKey().split(':');
 
     if (SuppliedOption.empty())

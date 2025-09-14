@@ -1017,9 +1017,9 @@ Token *Preprocessor::cacheMacroExpandedTokens(TokenLexer *tokLexer,
     // Go through all the TokenLexers whose 'Tokens' pointer points in the
     // buffer and update the pointers to the (potential) new buffer array.
     for (const auto &Lexer : MacroExpandingLexersStack) {
-      TokenLexer *prevLexer;
-      size_t tokIndex;
-      std::tie(prevLexer, tokIndex) = Lexer;
+      
+      
+      auto [prevLexer, tokIndex] = Lexer;
       prevLexer->Tokens = MacroExpandedTokens.data() + tokIndex;
     }
   }
@@ -1329,9 +1329,9 @@ bool Preprocessor::EvaluateHasInclude(Token &Tok, IdentifierInfo *II) {
 }
 
 bool Preprocessor::EvaluateHasIncludeNext(Token &Tok, IdentifierInfo *II) {
-  ConstSearchDirIterator Lookup = nullptr;
-  const FileEntry *LookupFromFile;
-  std::tie(Lookup, LookupFromFile) = getIncludeNextStart(Tok);
+  
+  
+  auto [Lookup, LookupFromFile] = getIncludeNextStart(Tok);
 
   return EvaluateHasIncludeCommon(Tok, II, *this, Lookup, LookupFromFile);
 }

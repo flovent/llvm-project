@@ -1611,9 +1611,9 @@ void UserValue::rewriteLocations(VirtRegMap &VRM, const MachineFunction &MF,
   locations.clear();
   SpillOffsets.clear();
   for (auto &Pair : NewLocations) {
-    bool Spilled;
-    unsigned SpillOffset;
-    std::tie(Spilled, SpillOffset) = Pair.second;
+    
+    
+    auto [Spilled, SpillOffset] = Pair.second;
     locations.push_back(Pair.first);
     if (Spilled) {
       unsigned NewLocNo = std::distance(&*NewLocations.begin(), &Pair);

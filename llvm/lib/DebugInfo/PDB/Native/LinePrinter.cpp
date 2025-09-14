@@ -226,9 +226,9 @@ void LinePrinter::formatMsfStreamData(StringRef Label, PDBFile &File,
   while (Reader.bytesRemaining() > 0) {
     OS << "\n";
 
-    Run FoundRun;
-    uint64_t RunOffset;
-    std::tie(FoundRun, RunOffset) = findRun(Substream.Offset, Runs);
+    
+    
+    auto [FoundRun, RunOffset] = findRun(Substream.Offset, Runs);
     assert(FoundRun.ByteLen >= RunOffset);
     uint64_t Len = FoundRun.ByteLen - RunOffset;
     Len = std::min(Len, Reader.bytesRemaining());

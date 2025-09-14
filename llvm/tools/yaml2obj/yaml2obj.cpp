@@ -64,8 +64,8 @@ static std::optional<std::string> preprocess(StringRef Buf,
                                              yaml::ErrorHandler ErrHandler) {
   DenseMap<StringRef, StringRef> Defines;
   for (StringRef Define : D) {
-    StringRef Macro, Definition;
-    std::tie(Macro, Definition) = Define.split('=');
+    
+    auto [Macro, Definition] = Define.split('=');
     if (!Define.count('=') || Macro.empty()) {
       ErrHandler("invalid syntax for -D: " + Define);
       return {};
@@ -82,9 +82,9 @@ static std::optional<std::string> preprocess(StringRef Buf,
       size_t I = Buf.find_first_of("[]", 2);
       if (Buf.substr(I).starts_with("]]")) {
         StringRef MacroExpr = Buf.substr(2, I - 2);
-        StringRef Macro;
-        StringRef Default;
-        std::tie(Macro, Default) = MacroExpr.split('=');
+        
+        
+        auto [Macro, Default] = MacroExpr.split('=');
 
         // When the -D option is requested, we use the provided value.
         // Otherwise we use a default macro value if present.

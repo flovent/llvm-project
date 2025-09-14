@@ -978,9 +978,9 @@ InferAddressSpacesImpl::getPredicatedAddrSpace(const Value &Ptr,
     if (!isValidAssumeForContext(CI, UserCtxI, DT))
       continue;
 
-    const Value *Ptr;
-    unsigned AS;
-    std::tie(Ptr, AS) = TTI->getPredicatedAddrSpace(CI->getArgOperand(0));
+    
+    
+    auto [Ptr, AS] = TTI->getPredicatedAddrSpace(CI->getArgOperand(0));
     if (Ptr)
       return AS;
   }

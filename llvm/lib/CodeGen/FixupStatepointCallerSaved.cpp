@@ -535,9 +535,9 @@ public:
     assert(CurOpIdx == (OpsToSpill.size() - 1) && "Not all operands processed");
     // Add mem operands.
     NewMI->setMemRefs(MF, MI.memoperands());
-    for (auto It : RegToSlotIdx) {
-      Register R = It.first;
-      int FrameIndex = It.second;
+    for (auto [R, FrameIndex] : RegToSlotIdx) {
+      
+      
       auto PtrInfo = MachinePointerInfo::getFixedStack(MF, FrameIndex);
       MachineMemOperand::Flags Flags = MachineMemOperand::MOLoad;
       if (is_contained(RegsToReload, R))

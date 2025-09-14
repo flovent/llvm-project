@@ -5695,9 +5695,9 @@ OpenMPIRBuilder::tileLoops(DebugLoc DL, ArrayRef<CanonicalLoopInfo *> Loops,
   // Insert the inbetween code into the body.
   BasicBlock *BodyEnter = Enter;
   BasicBlock *BodyEntered = nullptr;
-  for (std::pair<BasicBlock *, BasicBlock *> P : InbetweenCode) {
-    BasicBlock *EnterBB = P.first;
-    BasicBlock *ExitBB = P.second;
+  for (auto [EnterBB, ExitBB] : InbetweenCode) {
+    
+    
 
     if (BodyEnter)
       redirectTo(BodyEnter, EnterBB, DL);

@@ -3597,9 +3597,9 @@ void LSRInstance::CollectFixupsAndInitialFormulae() {
     }
 
     // Get or create an LSRUse.
-    std::pair<size_t, Immediate> P = getUse(S, Kind, AccessTy);
-    size_t LUIdx = P.first;
-    Immediate Offset = P.second;
+    auto [LUIdx, Offset] = getUse(S, Kind, AccessTy);
+    
+    
     LSRUse &LU = Uses[LUIdx];
 
     // Record the fixup.
@@ -3795,10 +3795,10 @@ LSRInstance::CollectLoopInvariantFixupsAndFormulae() {
         if (UserInst->isLifetimeStartOrEnd())
           continue;
 
-        std::pair<size_t, Immediate> P =
+        auto [LUIdx, Offset] =
             getUse(S, LSRUse::Basic, MemAccessTy());
-        size_t LUIdx = P.first;
-        Immediate Offset = P.second;
+        
+        
         LSRUse &LU = Uses[LUIdx];
         LSRFixup &LF = LU.getNewFixup();
         LF.UserInst = const_cast<Instruction *>(UserInst);

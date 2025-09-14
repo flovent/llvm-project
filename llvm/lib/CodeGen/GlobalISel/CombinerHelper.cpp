@@ -3766,8 +3766,8 @@ bool CombinerHelper::matchXorOfAndWithSameReg(
 void CombinerHelper::applyXorOfAndWithSameReg(
     MachineInstr &MI, std::pair<Register, Register> &MatchInfo) const {
   // Fold (xor (and x, y), y) -> (and (not x), y)
-  Register X, Y;
-  std::tie(X, Y) = MatchInfo;
+  
+  auto [X, Y] = MatchInfo;
   auto Not = Builder.buildNot(MRI.getType(X), X);
   Observer.changingInstr(MI);
   MI.setDesc(Builder.getTII().get(TargetOpcode::G_AND));
@@ -4045,9 +4045,9 @@ CombinerHelper::findLoadOffsetsForLoadOrCombine(
     auto LoadAndPos = matchLoadAndBytePosition(Reg, MemSizeInBits, MRI);
     if (!LoadAndPos)
       return std::nullopt;
-    GZExtLoad *Load;
-    int64_t DstPos;
-    std::tie(Load, DstPos) = *LoadAndPos;
+    
+    
+    auto [Load, DstPos] = *LoadAndPos;
 
     // TODO: Handle multiple MachineBasicBlocks. Currently not handled because
     // it is difficult to check for stores/calls/etc between loads.

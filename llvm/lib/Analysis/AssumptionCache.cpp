@@ -85,9 +85,9 @@ findAffectedValues(CallBase *CI, TargetTransformInfo *TTI,
   findValuesAffectedByCondition(Cond, /*IsAssume=*/true, InsertAffected);
 
   if (TTI) {
-    const Value *Ptr;
-    unsigned AS;
-    std::tie(Ptr, AS) = TTI->getPredicatedAddrSpace(Cond);
+    
+    
+    auto [Ptr, AS] = TTI->getPredicatedAddrSpace(Cond);
     if (Ptr)
       AddAffectedVal(const_cast<Value *>(Ptr->stripInBoundsOffsets()),
                      AssumptionCache::ExprResultIdx);

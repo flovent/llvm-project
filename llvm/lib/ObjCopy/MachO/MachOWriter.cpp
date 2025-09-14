@@ -636,9 +636,9 @@ void MachOWriter::writeTail() {
           {O.ChainedFixupsCommandIndex, &MachOWriter::writeChainedFixupsData},
           {O.ExportsTrieCommandIndex, &MachOWriter::writeExportsTrieData}};
   for (const auto &W : LinkEditDataCommandWriters) {
-    std::optional<size_t> LinkEditDataCommandIndex;
-    WriteHandlerType WriteHandler;
-    std::tie(LinkEditDataCommandIndex, WriteHandler) = W;
+    
+    
+    auto [LinkEditDataCommandIndex, WriteHandler] = W;
     if (LinkEditDataCommandIndex) {
       const MachO::linkedit_data_command &LinkEditDataCommand =
           O.LoadCommands[*LinkEditDataCommandIndex]

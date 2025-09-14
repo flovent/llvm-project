@@ -227,8 +227,8 @@ Expected<Slice> Slice::create(const IRObjectFile &IRO, uint32_t Align) {
   Expected<MachoCPUTy> CPUOrErr = getMachoCPUFromTriple(IRO.getTargetTriple());
   if (!CPUOrErr)
     return CPUOrErr.takeError();
-  unsigned CPUType, CPUSubType;
-  std::tie(CPUType, CPUSubType) = CPUOrErr.get();
+  
+  auto [CPUType, CPUSubType] = CPUOrErr.get();
   // We don't directly use the architecture name of the target triple T, as,
   // for instance, thumb is treated as ARM by the MachOUniversal object.
   std::string ArchName(

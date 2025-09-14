@@ -1100,9 +1100,9 @@ void CXIndexDataConsumer::translateLoc(SourceLocation Loc,
   SourceManager &SM = Ctx->getSourceManager();
   Loc = SM.getFileLoc(Loc);
 
-  FileIDAndOffset LocInfo = SM.getDecomposedLoc(Loc);
-  FileID FID = LocInfo.first;
-  unsigned FileOffset = LocInfo.second;
+  auto [FID, FileOffset] = SM.getDecomposedLoc(Loc);
+  
+  
 
   if (FID.isInvalid())
     return;

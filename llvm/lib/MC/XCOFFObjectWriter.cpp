@@ -684,9 +684,9 @@ void XCOFFWriter::recordRelocation(const MCFragment &F, const MCFixup &Fixup,
   };
 
   const MCSymbol *const SymA = Target.getAddSym();
-  uint8_t Type;
-  uint8_t SignAndSize;
-  std::tie(Type, SignAndSize) = TargetObjectWriter->getRelocTypeAndSignSize(
+  
+  
+  auto [Type, SignAndSize] = TargetObjectWriter->getRelocTypeAndSignSize(
       Target, Fixup, Fixup.isPCRel());
 
   const MCSectionXCOFF *SymASec =

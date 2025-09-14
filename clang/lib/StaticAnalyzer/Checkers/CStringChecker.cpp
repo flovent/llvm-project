@@ -372,8 +372,8 @@ ProgramStateRef CStringChecker::checkNonNull(CheckerContext &C,
   if (!State)
     return nullptr;
 
-  ProgramStateRef stateNull, stateNonNull;
-  std::tie(stateNull, stateNonNull) =
+  
+  auto [stateNull, stateNonNull] =
       assumeZero(C, State, l, Arg.Expression->getType());
 
   if (stateNull && !stateNonNull) {
@@ -1318,16 +1318,16 @@ bool CStringChecker::memsetAux(const Expr *DstBuffer, ConstCFGElementRef Elem,
     // Get the base region's size.
     DefinedOrUnknownSVal SizeDV = getDynamicExtent(State, BR, svalBuilder);
 
-    ProgramStateRef StateWholeReg, StateNotWholeReg;
-    std::tie(StateWholeReg, StateNotWholeReg) =
+    
+    auto [StateWholeReg, StateNotWholeReg] =
         State->assume(svalBuilder.evalEQ(State, SizeDV, *SizeNL));
 
     // With the semantic of 'memset()', we should convert the CharVal to
     // unsigned char.
     CharVal = svalBuilder.evalCast(CharVal, Ctx.UnsignedCharTy, Ctx.IntTy);
 
-    ProgramStateRef StateNullChar, StateNonNullChar;
-    std::tie(StateNullChar, StateNonNullChar) =
+    
+    auto [StateNullChar, StateNonNullChar] =
         assumeZero(C, State, CharVal, Ctx.UnsignedCharTy);
 
     if (StateWholeReg && !StateNotWholeReg && StateNullChar &&
@@ -1391,8 +1391,8 @@ void CStringChecker::evalCopyCommon(CheckerContext &C, const CallEvent &Call,
   SVal sizeVal = state->getSVal(Size.Expression, LCtx);
   QualType sizeTy = Size.Expression->getType();
 
-  ProgramStateRef stateZeroSize, stateNonZeroSize;
-  std::tie(stateZeroSize, stateNonZeroSize) =
+  
+  auto [stateZeroSize, stateNonZeroSize] =
       assumeZero(C, state, sizeVal, sizeTy);
 
   // Get the value of the Dest.
@@ -1554,8 +1554,8 @@ void CStringChecker::evalMemcmp(CheckerContext &C, const CallEvent &Call,
   SVal sizeVal = State->getSVal(Size.Expression, LCtx);
   QualType sizeTy = Size.Expression->getType();
 
-  ProgramStateRef stateZeroSize, stateNonZeroSize;
-  std::tie(stateZeroSize, stateNonZeroSize) =
+  
+  auto [stateZeroSize, stateNonZeroSize] =
       assumeZero(C, State, sizeVal, sizeTy);
 
   // If the size can be zero, the result will be 0 in that case, and we don't
@@ -1579,8 +1579,8 @@ void CStringChecker::evalMemcmp(CheckerContext &C, const CallEvent &Call,
         State->getSVal(Right.Expression, LCtx).castAs<DefinedOrUnknownSVal>();
 
     // See if they are the same.
-    ProgramStateRef SameBuffer, NotSameBuffer;
-    std::tie(SameBuffer, NotSameBuffer) =
+    
+    auto [SameBuffer, NotSameBuffer] =
         State->assume(Builder.evalEQ(State, LV, RV));
 
     // If the two arguments are the same buffer, we know the result is 0,
@@ -1633,8 +1633,8 @@ void CStringChecker::evalstrLengthCommon(CheckerContext &C,
     const Expr *maxlenExpr = Call.getArgExpr(1);
     SVal maxlenVal = state->getSVal(maxlenExpr, LCtx);
 
-    ProgramStateRef stateZeroSize, stateNonZeroSize;
-    std::tie(stateZeroSize, stateNonZeroSize) =
+    
+    auto [stateZeroSize, stateNonZeroSize] =
       assumeZero(C, state, maxlenVal, maxlenExpr->getType());
 
     // If the size can be zero, the result will be 0 in that case, and we don't
@@ -1684,10 +1684,10 @@ void CStringChecker::evalstrLengthCommon(CheckerContext &C,
     std::optional<NonLoc> maxlenValNL = maxlenVal.getAs<NonLoc>();
 
     if (strLengthNL && maxlenValNL) {
-      ProgramStateRef stateStringTooLong, stateStringNotTooLong;
+      
 
       // Check if the strLength is greater than the maxlen.
-      std::tie(stateStringTooLong, stateStringNotTooLong) = state->assume(
+      auto [stateStringTooLong, stateStringNotTooLong] = state->assume(
           C.getSValBuilder()
               .evalBinOpNN(state, BO_GT, *strLengthNL, *maxlenValNL, cmpTy)
               .castAs<DefinedOrUnknownSVal>());
@@ -1885,11 +1885,11 @@ void CStringChecker::evalStrcpyCommon(CheckerContext &C, const CallEvent &Call,
       switch (appendK) {
       case ConcatFnKind::none:
       case ConcatFnKind::strcat: {
-        ProgramStateRef stateSourceTooLong, stateSourceNotTooLong;
+        
         // Check if the max number to copy is less than the length of the src.
         // If the bound is equal to the source length, strncpy won't null-
         // terminate the result!
-        std::tie(stateSourceTooLong, stateSourceNotTooLong) = state->assume(
+        auto [stateSourceTooLong, stateSourceNotTooLong] = state->assume(
             svalBuilder
                 .evalBinOpNN(state, BO_GE, *strLengthNL, *lenValNL, cmpTy)
                 .castAs<DefinedOrUnknownSVal>());
@@ -1928,8 +1928,8 @@ void CStringChecker::evalStrcpyCommon(CheckerContext &C, const CallEvent &Call,
         SVal hasEnoughSpace = svalBuilder.evalBinOpNN(
             state, BO_LE, *strLengthNL, *freeSpaceNL, cmpTy);
 
-        ProgramStateRef TrueState, FalseState;
-        std::tie(TrueState, FalseState) =
+        
+        auto [TrueState, FalseState] =
             state->assume(hasEnoughSpace.castAs<DefinedOrUnknownSVal>());
 
         // srcStrLength <= size - dstStrLength -1
@@ -2409,8 +2409,8 @@ void CStringChecker::evalStrcmpCommon(CheckerContext &C, const CallEvent &Call,
   // See if they are the same.
   SValBuilder &svalBuilder = C.getSValBuilder();
   DefinedOrUnknownSVal SameBuf = svalBuilder.evalEQ(state, LV, RV);
-  ProgramStateRef StSameBuf, StNotSameBuf;
-  std::tie(StSameBuf, StNotSameBuf) = state->assume(SameBuf);
+  
+  auto [StSameBuf, StNotSameBuf] = state->assume(SameBuf);
 
   // If the two arguments might be the same buffer, we know the result is 0,
   // and we only need to check one size.
@@ -2613,8 +2613,8 @@ void CStringChecker::evalMemset(CheckerContext &C,
   SVal SizeVal = C.getSVal(Size.Expression);
   QualType SizeTy = Size.Expression->getType();
 
-  ProgramStateRef ZeroSize, NonZeroSize;
-  std::tie(ZeroSize, NonZeroSize) = assumeZero(C, State, SizeVal, SizeTy);
+  
+  auto [ZeroSize, NonZeroSize] = assumeZero(C, State, SizeVal, SizeTy);
 
   // Get the value of the memory area.
   SVal BufferPtrVal = C.getSVal(Buffer.Expression);
@@ -2661,8 +2661,8 @@ void CStringChecker::evalBzero(CheckerContext &C, const CallEvent &Call) const {
   SVal SizeVal = C.getSVal(Size.Expression);
   QualType SizeTy = Size.Expression->getType();
 
-  ProgramStateRef StateZeroSize, StateNonZeroSize;
-  std::tie(StateZeroSize, StateNonZeroSize) =
+  
+  auto [StateZeroSize, StateNonZeroSize] =
     assumeZero(C, State, SizeVal, SizeTy);
 
   // If the size is zero, there won't be any actual memory access,

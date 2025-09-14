@@ -305,9 +305,9 @@ void VarLenCodeEmitterGen::run(raw_ostream &OS) {
      << "  switch (opcode) {\n";
 
   // Emit each case statement
-  for (const auto &C : CaseMap) {
-    const std::string &Case = C.first;
-    const auto &InstList = C.second;
+  for (const auto& [Case, InstList] : CaseMap) {
+    
+    
 
     ListSeparator LS("\n");
     for (const auto &InstName : InstList)

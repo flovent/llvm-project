@@ -384,9 +384,9 @@ void RTDyldObjectLinkingLayer::onObjEmit(
     return;
   }
 
-  std::unique_ptr<object::ObjectFile> Obj;
-  std::unique_ptr<MemoryBuffer> ObjBuffer;
-  std::tie(Obj, ObjBuffer) = O.takeBinary();
+  
+  
+  auto [Obj, ObjBuffer] = O.takeBinary();
 
   // Run EventListener notifyLoaded callbacks.
   {

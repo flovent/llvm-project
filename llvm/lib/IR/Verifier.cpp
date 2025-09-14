@@ -7939,9 +7939,9 @@ bool TBAAVerifier::visitTBAAMetadata(Instruction &I, const MDNode *MD) {
       return false;
     }
 
-    bool Invalid;
-    unsigned BaseNodeBitWidth;
-    std::tie(Invalid, BaseNodeBitWidth) = verifyTBAABaseNode(I, BaseNode,
+    
+    
+    auto [Invalid, BaseNodeBitWidth] = verifyTBAABaseNode(I, BaseNode,
                                                              IsNewFormat);
 
     // If the base node is invalid in itself, then we've already printed all the

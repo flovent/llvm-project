@@ -283,8 +283,8 @@ Error COFFLinkGraphBuilder::handleDirectiveSection(StringRef Str) {
     StringRef S = Arg->getValue();
     switch (Arg->getOption().getID()) {
     case COFF_OPT_alternatename: {
-      StringRef From, To;
-      std::tie(From, To) = S.split('=');
+      
+      auto [From, To] = S.split('=');
       if (From.empty() || To.empty())
         return make_error<JITLinkError>(
             "Invalid COFF /alternatename directive");

@@ -73,8 +73,8 @@ void StringChecker::checkPreCall(const CallEvent &Call,
     return;
 
   // We managed to constrain the parameter to non-null.
-  ProgramStateRef NotNull, Null;
-  std::tie(NotNull, Null) = C.getState()->assume(*Param);
+  
+  auto [NotNull, Null] = C.getState()->assume(*Param);
 
   if (NotNull) {
     const auto Callback = [Param](PathSensitiveBugReport &BR) -> std::string {

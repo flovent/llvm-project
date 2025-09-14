@@ -106,8 +106,8 @@ BitVector StackAllocationAnalysis::computeNext(const MCInst &Point,
   }
 
   MCPhysReg From, To;
-  int64_t SPOffset, FPOffset;
-  std::tie(SPOffset, FPOffset) = *SPT.getStateBefore(Point);
+  
+  auto [SPOffset, FPOffset] = *SPT.getStateBefore(Point);
   if (MIB->isRegToRegMove(Point, From, To) && To == MIB->getStackPointer() &&
       From == MIB->getFramePointer()) {
     if (MIB->isLeave(Point))

@@ -54,9 +54,9 @@ void EditedSource::startingCommit() {}
 
 void EditedSource::finishedCommit() {
   for (auto &ExpArg : CurrCommitMacroArgExps) {
-    SourceLocation ExpLoc;
-    MacroArgUse ArgUse;
-    std::tie(ExpLoc, ArgUse) = ExpArg;
+    
+    
+    auto [ExpLoc, ArgUse] = ExpArg;
     auto &ArgUses = ExpansionToArgMap[ExpLoc];
     if (!llvm::is_contained(ArgUses, ArgUse))
       ArgUses.push_back(ArgUse);

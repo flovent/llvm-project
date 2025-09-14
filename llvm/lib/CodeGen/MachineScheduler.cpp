@@ -2665,8 +2665,8 @@ SchedBoundary::getNextResourceCycle(const MCSchedClassDesc *SC, unsigned PIdx,
 
     auto SubUnits = SchedModel->getProcResource(PIdx)->SubUnitsIdxBegin;
     for (unsigned I = 0, End = NumberOfInstances; I < End; ++I) {
-      unsigned NextUnreserved, NextInstanceIdx;
-      std::tie(NextUnreserved, NextInstanceIdx) =
+      
+      auto [NextUnreserved, NextInstanceIdx] =
           getNextResourceCycle(SC, SubUnits[I], ReleaseAtCycle, AcquireAtCycle);
       if (MinNextUnreserved > NextUnreserved) {
         InstanceIdx = NextInstanceIdx;
@@ -2742,8 +2742,8 @@ bool SchedBoundary::checkHazard(SUnit *SU) {
       unsigned ResIdx = PE.ProcResourceIdx;
       unsigned ReleaseAtCycle = PE.ReleaseAtCycle;
       unsigned AcquireAtCycle = PE.AcquireAtCycle;
-      unsigned NRCycle, InstanceIdx;
-      std::tie(NRCycle, InstanceIdx) =
+      
+      auto [NRCycle, InstanceIdx] =
           getNextResourceCycle(SC, ResIdx, ReleaseAtCycle, AcquireAtCycle);
       if (NRCycle > CurrCycle) {
 #if LLVM_ENABLE_ABI_BREAKING_CHECKS
@@ -2937,8 +2937,8 @@ unsigned SchedBoundary::countResource(const MCSchedClassDesc *SC, unsigned PIdx,
                       << "c\n");
   }
   // For reserved resources, record the highest cycle using the resource.
-  unsigned NextAvailable, InstanceIdx;
-  std::tie(NextAvailable, InstanceIdx) =
+  
+  auto [NextAvailable, InstanceIdx] =
       getNextResourceCycle(SC, PIdx, ReleaseAtCycle, AcquireAtCycle);
   if (NextAvailable > CurrCycle) {
     LLVM_DEBUG(dbgs() << "  Resource conflict: "
@@ -3036,8 +3036,8 @@ void SchedBoundary::bumpNode(SUnit *SU) {
         if (SchedModel->getProcResource(PIdx)->BufferSize == 0) {
 
           if (SchedModel && SchedModel->enableIntervals()) {
-            unsigned ReservedUntil, InstanceIdx;
-            std::tie(ReservedUntil, InstanceIdx) = getNextResourceCycle(
+            
+            auto [ReservedUntil, InstanceIdx] = getNextResourceCycle(
                 SC, PIdx, PI->ReleaseAtCycle, PI->AcquireAtCycle);
             if (isTop()) {
               ReservedResourceSegments[InstanceIdx].add(
@@ -3052,8 +3052,8 @@ void SchedBoundary::bumpNode(SUnit *SU) {
             }
           } else {
 
-            unsigned ReservedUntil, InstanceIdx;
-            std::tie(ReservedUntil, InstanceIdx) = getNextResourceCycle(
+            
+            auto [ReservedUntil, InstanceIdx] = getNextResourceCycle(
                 SC, PIdx, PI->ReleaseAtCycle, PI->AcquireAtCycle);
             if (isTop()) {
               ReservedCycles[InstanceIdx] =

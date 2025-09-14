@@ -169,9 +169,9 @@ Expected<const BinaryHolder::ObjectEntry &>
 BinaryHolder::ArchiveEntry::getObjectEntry(StringRef Filename,
                                            TimestampTy Timestamp,
                                            Options Opts) {
-  StringRef ArchiveFilename;
-  StringRef ObjectFilename;
-  std::tie(ArchiveFilename, ObjectFilename) = getArchiveAndObjectName(Filename);
+  
+  
+  auto [ArchiveFilename, ObjectFilename] = getArchiveAndObjectName(Filename);
   KeyTy Key = {ObjectFilename, Timestamp};
 
   // Try the cache first.

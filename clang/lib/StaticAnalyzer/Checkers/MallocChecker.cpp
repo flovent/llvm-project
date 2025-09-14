@@ -1317,8 +1317,8 @@ MallocChecker::performKernelMalloc(const CallEvent &Call, CheckerContext &C,
   DefinedSVal MaskedFlags = MaskedFlagsUC.castAs<DefinedSVal>();
 
   // Check if maskedFlags is non-zero.
-  ProgramStateRef TrueState, FalseState;
-  std::tie(TrueState, FalseState) = State->assume(MaskedFlags);
+  
+  auto [TrueState, FalseState] = State->assume(MaskedFlags);
 
   // If M_ZERO is set, treat this like calloc (initialized).
   if (TrueState && !FalseState) {
@@ -2267,8 +2267,8 @@ MallocChecker::FreeMemAux(CheckerContext &C, const Expr *ArgExpr,
     return nullptr;
 
   // The explicit NULL case, no operation is performed.
-  ProgramStateRef notNullState, nullState;
-  std::tie(notNullState, nullState) = State->assume(location);
+  
+  auto [notNullState, nullState] = State->assume(location);
   if (nullState && !notNullState)
     return nullptr;
 
@@ -2888,10 +2888,10 @@ MallocChecker::ReallocMemAux(CheckerContext &C, const CallEvent &Call,
       svalBuilder.makeIntValWithWidth(
           svalBuilder.getContext().getCanonicalSizeType(), 0));
 
-  ProgramStateRef StatePtrIsNull, StatePtrNotNull;
-  std::tie(StatePtrIsNull, StatePtrNotNull) = State->assume(PtrEQ);
-  ProgramStateRef StateSizeIsZero, StateSizeNotZero;
-  std::tie(StateSizeIsZero, StateSizeNotZero) = State->assume(SizeZero);
+  
+  auto [StatePtrIsNull, StatePtrNotNull] = State->assume(PtrEQ);
+  
+  auto [StateSizeIsZero, StateSizeNotZero] = State->assume(SizeZero);
   // We only assume exceptional states if they are definitely true; if the
   // state is under-constrained, assume regular realloc behavior.
   bool PrtIsNull = StatePtrIsNull && !StatePtrNotNull;
@@ -3038,9 +3038,9 @@ void MallocChecker::HandleLeak(SymbolRef Sym, ExplodedNode *N,
   // With leaks, we want to unique them by the location where they were
   // allocated, and only report a single path.
   PathDiagnosticLocation LocUsedForUniqueing;
-  const ExplodedNode *AllocNode = nullptr;
-  const MemRegion *Region = nullptr;
-  std::tie(AllocNode, Region) = getAllocationSite(N, Sym, C);
+  
+  
+  auto [AllocNode, Region] = getAllocationSite(N, Sym, C);
 
   const Stmt *AllocationStmt = AllocNode->getStmtForDiagnostics();
   if (AllocationStmt)

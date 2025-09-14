@@ -373,9 +373,9 @@ Function *ModuleSanitizerCoverage::CreateInitCallsForSections(
     const char *Section) {
   if (ClSancovDropCtors)
     return nullptr;
-  auto SecStartEnd = CreateSecStartEnd(M, Section, Ty);
-  auto SecStart = SecStartEnd.first;
-  auto SecEnd = SecStartEnd.second;
+  auto [SecStart, SecEnd] = CreateSecStartEnd(M, Section, Ty);
+  
+  
   Function *CtorFunc;
   std::tie(CtorFunc, std::ignore) = createSanitizerCtorAndInitFunctions(
       M, CtorName, InitFunctionName, {PtrTy, PtrTy}, {SecStart, SecEnd});

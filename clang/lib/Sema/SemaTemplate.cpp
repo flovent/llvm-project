@@ -3816,9 +3816,9 @@ QualType Sema::CheckTemplateIdType(ElaboratedTypeKeyword Keyword,
                 diag::err_typename_nested_not_found_enable_if &&
               TemplateArgs[0].getArgument().getKind()
                 == TemplateArgument::Expression) {
-            Expr *FailedCond;
-            std::string FailedDescription;
-            std::tie(FailedCond, FailedDescription) =
+            
+            
+            auto [FailedCond, FailedDescription] =
               findFailedBooleanCondition(TemplateArgs[0].getSourceExpression());
 
             // Remove the old SFINAE diagnostic.
@@ -11253,9 +11253,9 @@ Sema::CheckTypenameType(ElaboratedTypeKeyword Keyword,
       // If we have a condition, narrow it down to the specific failed
       // condition.
       if (Cond) {
-        Expr *FailedCond;
-        std::string FailedDescription;
-        std::tie(FailedCond, FailedDescription) =
+        
+        
+        auto [FailedCond, FailedDescription] =
           findFailedBooleanCondition(Cond);
 
         Diag(FailedCond->getExprLoc(),

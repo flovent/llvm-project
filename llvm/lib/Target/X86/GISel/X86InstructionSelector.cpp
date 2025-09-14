@@ -1005,9 +1005,9 @@ bool X86InstructionSelector::selectCmp(MachineInstr &I,
                                        MachineFunction &MF) const {
   assert((I.getOpcode() == TargetOpcode::G_ICMP) && "unexpected instruction");
 
-  X86::CondCode CC;
-  bool SwapArgs;
-  std::tie(CC, SwapArgs) = X86::getX86ConditionCode(
+  
+  
+  auto [CC, SwapArgs] = X86::getX86ConditionCode(
       (CmpInst::Predicate)I.getOperand(1).getPredicate());
 
   Register LHS = I.getOperand(2).getReg();
@@ -1132,9 +1132,9 @@ bool X86InstructionSelector::selectFCmp(MachineInstr &I,
     return true;
   }
 
-  X86::CondCode CC;
-  bool SwapArgs;
-  std::tie(CC, SwapArgs) = X86::getX86ConditionCode(Predicate);
+  
+  
+  auto [CC, SwapArgs] = X86::getX86ConditionCode(Predicate);
   assert(CC <= X86::LAST_VALID_COND && "Unexpected condition code.");
 
   if (SwapArgs)

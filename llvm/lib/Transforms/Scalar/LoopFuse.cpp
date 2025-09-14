@@ -884,10 +884,10 @@ private:
           // the loops (second value of pair). The difference is not equal to
           // std::nullopt iff the loops iterate a constant number of times, and
           // have a single exit.
-          std::pair<bool, std::optional<unsigned>> IdenticalTripCountRes =
+          auto [SameTripCount, TCDifference] =
               haveIdenticalTripCounts(*FC0, *FC1);
-          bool SameTripCount = IdenticalTripCountRes.first;
-          std::optional<unsigned> TCDifference = IdenticalTripCountRes.second;
+          
+          
 
           // Here we are checking that FC0 (the first loop) can be peeled, and
           // both loops have different tripcounts.

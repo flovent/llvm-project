@@ -4938,8 +4938,8 @@ static void makeDstOps(SmallVectorImpl<DstOp> &DstOps, LLT Ty,
   assert(Ty.isVector() && "Expected vector type");
   LLT EltTy = Ty.getElementType();
   LLT NarrowTy = (NumElts == 1) ? EltTy : LLT::fixed_vector(NumElts, EltTy);
-  int NumParts, NumLeftover;
-  std::tie(NumParts, NumLeftover) =
+  
+  auto [NumParts, NumLeftover] =
       getNarrowTypeBreakDown(Ty, NarrowTy, LeftoverTy);
 
   assert(NumParts > 0 && "Error in getNarrowTypeBreakDown");

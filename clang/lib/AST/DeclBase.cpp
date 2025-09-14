@@ -1605,8 +1605,8 @@ DeclContext::LoadLexicalDeclsFromExternalStorage() const {
 
   // Splice the newly-read declarations into the beginning of the list
   // of declarations.
-  Decl *ExternalFirst, *ExternalLast;
-  std::tie(ExternalFirst, ExternalLast) =
+  
+  auto [ExternalFirst, ExternalLast] =
       BuildDeclChain(Decls, FieldsAlreadyLoaded);
   ExternalLast->NextInContextAndBits.setPointer(FirstDecl);
   FirstDecl = ExternalFirst;

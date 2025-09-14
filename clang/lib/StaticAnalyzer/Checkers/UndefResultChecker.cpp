@@ -52,8 +52,8 @@ static bool isArrayIndexOutOfBounds(CheckerContext &C, const Expr *Ex) {
   DefinedOrUnknownSVal Idx = ER->getIndex().castAs<DefinedOrUnknownSVal>();
   DefinedOrUnknownSVal ElementCount = getDynamicElementCount(
       state, ER->getSuperRegion(), C.getSValBuilder(), ER->getValueType());
-  ProgramStateRef StInBound, StOutBound;
-  std::tie(StInBound, StOutBound) = state->assumeInBoundDual(Idx, ElementCount);
+  
+  auto [StInBound, StOutBound] = state->assumeInBoundDual(Idx, ElementCount);
   return StOutBound && !StInBound;
 }
 

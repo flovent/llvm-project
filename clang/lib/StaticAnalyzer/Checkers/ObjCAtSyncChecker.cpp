@@ -57,8 +57,8 @@ void ObjCAtSyncChecker::checkPreStmt(const ObjCAtSynchronizedStmt *S,
     return;
 
   // Check for null mutexes.
-  ProgramStateRef notNullState, nullState;
-  std::tie(notNullState, nullState) = state->assume(V.castAs<DefinedSVal>());
+  
+  auto [notNullState, nullState] = state->assume(V.castAs<DefinedSVal>());
 
   if (nullState) {
     if (!notNullState) {

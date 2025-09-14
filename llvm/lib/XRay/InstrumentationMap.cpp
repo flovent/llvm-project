@@ -108,9 +108,9 @@ loadObj(StringRef Filename, object::OwningBinary<object::ObjectFile> &ObjFile,
         return static_cast<uint32_t>(0);
     }(ObjFile.getBinary());
 
-    object::SupportsRelocation Supports;
-    object::RelocationResolver Resolver;
-    std::tie(Supports, Resolver) =
+    
+    
+    auto [Supports, Resolver] =
         object::getRelocationResolver(*ObjFile.getBinary());
 
     for (const object::SectionRef &Section : Sections) {

@@ -1486,9 +1486,9 @@ Demangler::demangleLocallyScopedNamePiece(std::string_view &MangledName) {
 
   NamedIdentifierNode *Identifier = Arena.alloc<NamedIdentifierNode>();
   consumeFront(MangledName, '?');
-  uint64_t Number = 0;
-  bool IsNegative = false;
-  std::tie(Number, IsNegative) = demangleNumber(MangledName);
+  
+  
+  auto [Number, IsNegative] = demangleNumber(MangledName);
   assert(!IsNegative);
 
   // One ? to terminate the number
@@ -2123,9 +2123,9 @@ Demangler::demangleMemberPointerType(std::string_view &MangledName) {
     Pointer->ClassParent = demangleFullyQualifiedTypeName(MangledName);
     Pointer->Pointee = demangleFunctionType(MangledName, true);
   } else {
-    Qualifiers PointeeQuals = Q_None;
-    bool IsMember = false;
-    std::tie(PointeeQuals, IsMember) = demangleQualifiers(MangledName);
+    
+    
+    auto [PointeeQuals, IsMember] = demangleQualifiers(MangledName);
     assert(IsMember || Error);
     Pointer->ClassParent = demangleFullyQualifiedTypeName(MangledName);
 
@@ -2197,9 +2197,9 @@ ArrayTypeNode *Demangler::demangleArrayType(std::string_view &MangledName) {
   assert(MangledName.front() == 'Y');
   MangledName.remove_prefix(1);
 
-  uint64_t Rank = 0;
-  bool IsNegative = false;
-  std::tie(Rank, IsNegative) = demangleNumber(MangledName);
+  
+  
+  auto [Rank, IsNegative] = demangleNumber(MangledName);
   if (IsNegative || Rank == 0) {
     Error = true;
     return nullptr;

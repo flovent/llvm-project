@@ -443,9 +443,9 @@ void FrameTypeBuilder::addFieldForAllocas(const Function &F,
   }
   // Recover the default target destination for each Switch statement
   // reserved.
-  for (auto SwitchAndDefaultDest : DefaultSuspendDest) {
-    SwitchInst *SWI = SwitchAndDefaultDest.first;
-    BasicBlock *DestBB = SwitchAndDefaultDest.second;
+  for (auto [SWI, DestBB] : DefaultSuspendDest) {
+    
+    
     SWI->setDefaultDest(DestBB);
   }
   // This Debug Info could tell us which allocas are merged into one slot.
